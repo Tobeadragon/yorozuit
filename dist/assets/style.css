@@ -1452,6 +1452,12 @@ h1 {
     }
 }
 
+@media (min-width: 900px) and (max-width: 1023px) {
+    .hero h1 {
+        font-size: 36px;
+    }
+}
+
 @media (max-width: 900px) {
     .container {
         width: min(100% - 40px, 720px);
