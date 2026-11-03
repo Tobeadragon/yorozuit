@@ -1,88 +1,223 @@
 <!doctype html>
 <html lang="{{lang}}">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="{{meta.description}}">
-  <meta name="theme-color" content="#f6f8f7">
-  <title>{{meta.title}}</title>
-  <link rel="canonical" href="{{canonical}}">
-  <link rel="alternate" hreflang="ja" href="https://yorozuit.de/">
-  <link rel="alternate" hreflang="de" href="https://yorozuit.de/de/">
-  <link rel="alternate" hreflang="en" href="https://yorozuit.de/en/">
-  <link rel="alternate" hreflang="x-default" href="https://yorozuit.de/">
-  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script src="/assets/main.js" defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{meta.description}}">
+    <meta name="theme-color" content="#f6f8f7">
+    <title>{{meta.title}}</title>
+    <link rel="canonical" href="{{canonical}}">
+    <link rel="alternate" hreflang="ja" href="https://yorozuit.de/">
+    <link rel="alternate" hreflang="de" href="https://yorozuit.de/de/">
+    <link rel="alternate" hreflang="en" href="https://yorozuit.de/en/">
+    <link rel="alternate" hreflang="x-default" href="https://yorozuit.de/">
+    <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="/assets/config.js" defer></script>
+    <script src="/assets/main.js" defer></script>
 </head>
+
 <body>
-  <a class="skip-link" href="#main">{{ui.skip}}</a>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="{{homeUrl}}" aria-label="YOROZU IT home">
-        <img src="/assets/logo.svg" width="42" height="42" alt="">
-        <span><strong>YOROZU IT</strong><small>{{ui.brandSub}}</small></span>
-      </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{{ui.menu}}">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="site-nav" id="site-nav" aria-label="{{ui.primaryNav}}">
-        <a href="#services">{{ui.navServices}}</a>
-        <a href="#about">{{ui.navAbout}}</a>
-        <a href="#pricing">{{ui.navPricing}}</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contact" class="nav-contact">{{ui.navContact}}</a>
-        <div class="language-switch" aria-label="{{ui.language}}">
-          <a href="/" lang="ja" hreflang="ja" class="{{jaActive}}">日本語</a>
-          <a href="/de/" lang="de" hreflang="de" class="{{deActive}}">DE</a>
-          <a href="/en/" lang="en" hreflang="en" class="{{enActive}}">EN</a>
+    <a class="skip-link" href="#main">{{ui.skip}}</a>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="{{homeUrl}}" aria-label="YOROZU IT home">
+                <img src="/assets/logo.svg" width="42" height="42" alt="">
+                <span><strong>YOROZU IT</strong><small>{{ui.brandSub}}</small></span>
+            </a>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav"
+                aria-label="{{ui.menu}}">
+                <span></span><span></span><span></span>
+            </button>
+            <nav class="site-nav" id="site-nav" aria-label="{{ui.primaryNav}}">
+                <a href="#services">{{ui.navServices}}</a>
+                <a href="#about">{{ui.navAbout}}</a>
+                <a href="#pricing">{{ui.navPricing}}</a>
+                <a href="#faq">FAQ</a>
+                <a href="#contact" class="nav-contact">{{ui.navContact}}</a>
+                <div class="language-switch" aria-label="{{ui.language}}">
+                    <a href="/" lang="ja" hreflang="ja" class="{{jaActive}}">日本語</a>
+                    <a href="/de/" lang="de" hreflang="de" class="{{deActive}}">DE</a>
+                    <a href="/en/" lang="en" hreflang="en" class="{{enActive}}">EN</a>
+                </div>
+            </nav>
         </div>
-      </nav>
-    </div>
-  </header>
-  <main id="main">
-    <section class="hero section-wrap">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot"></span>{{hero.eyebrow}}</p>
-          <h1>{{hero.title}}</h1>
-          <p class="hero-lead">{{hero.lead}}</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#contact">{{ui.ctaContact}} <span aria-hidden="true">↗</span></a>
-            <a class="button button-text" href="#services">{{ui.ctaServices}} <span aria-hidden="true">↓</span></a>
-          </div>
-          <p class="hero-note"><span aria-hidden="true">◎</span> {{hero.note}}</p>
+    </header>
+    <main id="main">
+        <section class="hero section-wrap">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span class="eyebrow-dot"></span>{{hero.eyebrow}}</p>
+                    <h1>{{hero.title}}</h1>
+                    <p class="hero-lead">{{hero.lead}}</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#contact">{{ui.ctaContact}} <span
+                                aria-hidden="true">↗</span></a>
+                        <a class="button button-text" href="#services">{{ui.ctaServices}} <span
+                                aria-hidden="true">↓</span></a>
+                    </div>
+                    <p class="hero-note"><span aria-hidden="true">◎</span> {{hero.note}}</p>
+                </div>
+                <div class="hero-visual" aria-label="{{hero.visualAlt}}" role="img">
+                    <div class="visual-orbit orbit-one"></div>
+                    <div class="visual-orbit orbit-two"></div>
+                    <div class="visual-window">
+                        <div class="window-top"><i></i><i></i><i></i><span>yorozu / support</span></div>
+                        <div class="window-content">
+                            <div class="window-sidebar"><b></b><i></i><i></i><i></i></div>
+                            <div class="window-main">
+                                <div class="screen-label">IT HELP, MADE HUMAN</div>
+                                <div class="screen-line line-wide"></div>
+                                <div class="screen-line line-mid"></div>
+                                <div class="screen-card"><span class="screen-icon">Wi-Fi</span><span><b>Home
+                                            connection</b><small>Connected and ready</small></span><strong>✓</strong>
+                                </div>
+                                <div class="screen-bottom"><span></span><span></span><span></span><span></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-note"><span class="profile-avatar"
+                            aria-hidden="true">{{profileImage}}</span><span><strong>{{hero.cardTitle}}</strong><small>{{hero.cardText}}</small></span><span
+                            class="profile-mark" aria-hidden="true">✳</span></div>
+                    <div class="hero-stamp"><span>DE</span><span class="stamp-dot"></span><span>JP</span></div>
+                </div>
+            </div>
+            <div class="container trust-row">
+                <span>{{hero.trustLabel}}</span><strong>{{hero.trustOne}}</strong><i></i><strong>{{hero.trustTwo}}</strong><i></i><strong>{{hero.trustThree}}</strong>
+            </div>
+        </section>
+        <section class="intro section-pad" id="about">
+            <div class="container intro-grid">
+                <div class="section-heading">
+                    <p class="eyebrow">{{about.eyebrow}}</p>
+                    <h2>{{about.title}}</h2>
+                </div>
+                <div class="intro-copy">
+                    <p>{{about.body}}</p><a class="inline-link" href="#contact">{{about.link}} <span
+                            aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+            <div class="container benefit-grid">{{benefits}}</div>
+        </section>
+        <section class="services section-pad" id="services">
+            <div class="container">
+                <div class="section-heading heading-row">
+                    <div>
+                        <p class="eyebrow">{{services.eyebrow}}</p>
+                        <h2>{{services.title}}</h2>
+                    </div>
+                    <p class="heading-description">{{services.description}}</p>
+                </div>
+                <div class="service-grid">{{serviceCards}}</div>
+            </div>
+        </section>
+        <section class="process section-pad">
+            <div class="container process-grid">
+                <div class="section-heading">
+                    <p class="eyebrow">{{process.eyebrow}}</p>
+                    <h2>{{process.title}}</h2>
+                    <p class="section-description">{{process.description}}</p>
+                </div>
+                <div class="steps">{{steps}}</div>
+            </div>
+            <div class="container notice"><span aria-hidden="true">i</span>
+                <p>{{process.notice}}</p>
+            </div>
+        </section>
+        <section class="pricing section-pad" id="pricing">
+            <div class="container pricing-inner">
+                <div>
+                    <p class="eyebrow">{{pricing.eyebrow}}</p>
+                    <h2>{{pricing.title}}</h2>
+                    <p>{{pricing.body}}</p>
+                </div>
+                <div class="price-panel">
+                    <span>{{pricing.label}}</span><strong>{{pricing.amount}}</strong><small>{{pricing.note}}</small><a
+                        class="button button-light" href="#contact">{{pricing.cta}} <span
+                            aria-hidden="true">↗</span></a></div>
+            </div>
+        </section>
+        <section class="area section-pad">
+            <div class="container area-grid">
+                <div>
+                    <p class="eyebrow">{{area.eyebrow}}</p>
+                    <h2>{{area.title}}</h2>
+                    <p>{{area.body}}</p>
+                </div>
+                <div class="area-content">
+                    <div class="area-map" aria-hidden="true"><span class="map-ring ring-a"></span><span
+                            class="map-ring ring-b"></span><span class="map-center">D</span><i
+                            class="map-pin pin-a"></i><i class="map-pin pin-b"></i><i class="map-pin pin-c"></i><i
+                            class="map-pin pin-d"></i></div>
+                    <div class="area-list">{{areaList}}</div>
+                </div>
+            </div>
+        </section>
+        <section class="faq section-pad" id="faq">
+            <div class="container faq-grid">
+                <div class="section-heading">
+                    <p class="eyebrow">{{faq.eyebrow}}</p>
+                    <h2>{{faq.title}}</h2>
+                    <p class="section-description">{{faq.description}}</p><a class="inline-link"
+                        href="#contact">{{faq.link}} <span aria-hidden="true">↗</span></a>
+                </div>
+                <div class="faq-list">{{faqs}}</div>
+            </div>
+        </section>
+        <section class="contact section-pad" id="contact">
+            <div class="container contact-grid">
+                <div class="contact-copy">
+                    <p class="eyebrow">{{contact.eyebrow}}</p>
+                    <h2>{{contact.title}}</h2>
+                    <p>{{contact.body}}</p>
+                    <div class="contact-languages">
+                        <span>{{contact.languagesLabel}}</span><strong>日本語</strong><strong>Deutsch</strong><strong>English</strong>
+                    </div>
+                    <p class="contact-placeholder">{{contact.placeholder}}</p>
+                </div>
+                <form class="contact-form" id="contact-form" novalidate>
+                    <div class="form-row"><label>{{form.nameLabel}}<input name="name" autocomplete="name" required
+                                minlength="2" placeholder="{{form.namePlaceholder}}"><span class="field-error"
+                                data-error="name"></span></label><label>{{form.emailLabel}}<input name="email"
+                                type="email" autocomplete="email" required placeholder="{{form.emailPlaceholder}}"><span
+                                class="field-error" data-error="email"></span></label></div>
+                    <div class="form-row"><label>{{form.phoneLabel}}<input name="phone" type="tel" autocomplete="tel"
+                                placeholder="{{form.phonePlaceholder}}"></label><label>{{form.languageLabel}}<select
+                                name="language" required>{{languageOptions}}</select><span class="field-error"
+                                data-error="language"></span></label></div><label>{{form.serviceLabel}}<select
+                            name="service" required>{{serviceOptions}}</select><span class="field-error"
+                            data-error="service"></span></label><label>{{form.messageLabel}}<textarea name="message"
+                            rows="5" required minlength="10" placeholder="{{form.messagePlaceholder}}"></textarea><span
+                            class="field-error" data-error="message"></span></label><label class="consent"><input
+                            type="checkbox" name="consent" required><span>{{form.consent}}</span></label><span
+                        class="field-error" data-error="consent"></span><input name="website" type="text" tabindex="-1"
+                        autocomplete="off" hidden><button class="button button-primary submit-button"
+                        type="submit">{{form.submit}} <span aria-hidden="true">↗</span></button>
+                    <p class="form-disclaimer">{{form.disclaimer}}</p>
+                    <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-main"><a class="brand footer-brand" href="{{homeUrl}}"><img src="/assets/logo.svg"
+                    width="38" height="38" alt=""><span><strong>YOROZU
+                        IT</strong><small>{{ui.brandSub}}</small></span></a>
+            <p>{{footer.tagline}}</p>
+            <div class="footer-links"><a href="#services">{{ui.navServices}}</a><a
+                    href="#contact">{{ui.navContact}}</a><a href="#legal-placeholder">Impressum
+                    <small>{{footer.placeholder}}</small></a><a href="#legal-placeholder">Datenschutz
+                    <small>{{footer.placeholder}}</small></a></div>
         </div>
-        <div class="hero-visual" aria-label="{{hero.visualAlt}}" role="img">
-          <div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div>
-          <div class="visual-window"><div class="window-top"><i></i><i></i><i></i><span>yorozu / support</span></div><div class="window-content"><div class="window-sidebar"><b></b><i></i><i></i><i></i></div><div class="window-main"><div class="screen-label">IT HELP, MADE HUMAN</div><div class="screen-line line-wide"></div><div class="screen-line line-mid"></div><div class="screen-card"><span class="screen-icon">Wi-Fi</span><span><b>Home connection</b><small>Connected and ready</small></span><strong>✓</strong></div><div class="screen-bottom"><span></span><span></span><span></span><span></span></div></div></div></div>
-          <div class="profile-note"><span class="profile-avatar" aria-hidden="true">{{profileImage}}</span><span><strong>{{hero.cardTitle}}</strong><small>{{hero.cardText}}</small></span><span class="profile-mark" aria-hidden="true">✳</span></div>
-          <div class="hero-stamp"><span>DE</span><span class="stamp-dot"></span><span>JP</span></div>
-        </div>
-      </div>
-      <div class="container trust-row"><span>{{hero.trustLabel}}</span><strong>{{hero.trustOne}}</strong><i></i><strong>{{hero.trustTwo}}</strong><i></i><strong>{{hero.trustThree}}</strong></div>
-    </section>
-    <section class="intro section-pad" id="about">
-      <div class="container intro-grid"><div class="section-heading"><p class="eyebrow">{{about.eyebrow}}</p><h2>{{about.title}}</h2></div><div class="intro-copy"><p>{{about.body}}</p><a class="inline-link" href="#contact">{{about.link}} <span aria-hidden="true">↗</span></a></div></div>
-      <div class="container benefit-grid">{{benefits}}</div>
-    </section>
-    <section class="services section-pad" id="services">
-      <div class="container"><div class="section-heading heading-row"><div><p class="eyebrow">{{services.eyebrow}}</p><h2>{{services.title}}</h2></div><p class="heading-description">{{services.description}}</p></div><div class="service-grid">{{serviceCards}}</div></div>
-    </section>
-    <section class="process section-pad">
-      <div class="container process-grid"><div class="section-heading"><p class="eyebrow">{{process.eyebrow}}</p><h2>{{process.title}}</h2><p class="section-description">{{process.description}}</p></div><div class="steps">{{steps}}</div></div>
-      <div class="container notice"><span aria-hidden="true">i</span><p>{{process.notice}}</p></div>
-    </section>
-    <section class="pricing section-pad" id="pricing">
-      <div class="container pricing-inner"><div><p class="eyebrow">{{pricing.eyebrow}}</p><h2>{{pricing.title}}</h2><p>{{pricing.body}}</p></div><div class="price-panel"><span>{{pricing.label}}</span><strong>{{pricing.amount}}</strong><small>{{pricing.note}}</small><a class="button button-light" href="#contact">{{pricing.cta}} <span aria-hidden="true">↗</span></a></div></div>
-    </section>
-    <section class="area section-pad"><div class="container area-grid"><div><p class="eyebrow">{{area.eyebrow}}</p><h2>{{area.title}}</h2><p>{{area.body}}</p></div><div class="area-content"><div class="area-map" aria-hidden="true"><span class="map-ring ring-a"></span><span class="map-ring ring-b"></span><span class="map-center">D</span><i class="map-pin pin-a"></i><i class="map-pin pin-b"></i><i class="map-pin pin-c"></i><i class="map-pin pin-d"></i></div><div class="area-list">{{areaList}}</div></div></div></section>
-    <section class="faq section-pad" id="faq"><div class="container faq-grid"><div class="section-heading"><p class="eyebrow">{{faq.eyebrow}}</p><h2>{{faq.title}}</h2><p class="section-description">{{faq.description}}</p><a class="inline-link" href="#contact">{{faq.link}} <span aria-hidden="true">↗</span></a></div><div class="faq-list">{{faqs}}</div></div></section>
-    <section class="contact section-pad" id="contact"><div class="container contact-grid"><div class="contact-copy"><p class="eyebrow">{{contact.eyebrow}}</p><h2>{{contact.title}}</h2><p>{{contact.body}}</p><div class="contact-languages"><span>{{contact.languagesLabel}}</span><strong>日本語</strong><strong>Deutsch</strong><strong>English</strong></div><p class="contact-placeholder">{{contact.placeholder}}</p></div><form class="contact-form" id="contact-form" novalidate><div class="form-row"><label>{{form.nameLabel}}<input name="name" autocomplete="name" required minlength="2" placeholder="{{form.namePlaceholder}}"><span class="field-error" data-error="name"></span></label><label>{{form.emailLabel}}<input name="email" type="email" autocomplete="email" required placeholder="{{form.emailPlaceholder}}"><span class="field-error" data-error="email"></span></label></div><div class="form-row"><label>{{form.phoneLabel}}<input name="phone" type="tel" autocomplete="tel" placeholder="{{form.phonePlaceholder}}"></label><label>{{form.languageLabel}}<select name="language" required>{{languageOptions}}</select><span class="field-error" data-error="language"></span></label></div><label>{{form.serviceLabel}}<select name="service" required>{{serviceOptions}}</select><span class="field-error" data-error="service"></span></label><label>{{form.messageLabel}}<textarea name="message" rows="5" required minlength="10" placeholder="{{form.messagePlaceholder}}"></textarea><span class="field-error" data-error="message"></span></label><label class="consent"><input type="checkbox" name="consent" required><span>{{form.consent}}</span></label><span class="field-error" data-error="consent"></span><button class="button button-primary submit-button" type="submit">{{form.submit}} <span aria-hidden="true">↗</span></button><p class="form-disclaimer">{{form.disclaimer}}</p><div class="form-status" id="form-status" role="status" aria-live="polite"></div></form></div></section>
-  </main>
-  <footer class="site-footer"><div class="container footer-main"><a class="brand footer-brand" href="{{homeUrl}}"><img src="/assets/logo.svg" width="38" height="38" alt=""><span><strong>YOROZU IT</strong><small>{{ui.brandSub}}</small></span></a><p>{{footer.tagline}}</p><div class="footer-links"><a href="#services">{{ui.navServices}}</a><a href="#contact">{{ui.navContact}}</a><a href="#legal-placeholder">Impressum <small>{{footer.placeholder}}</small></a><a href="#legal-placeholder">Datenschutz <small>{{footer.placeholder}}</small></a></div></div><div class="container footer-bottom"><span>© {{year}} YOROZU IT</span><span>{{footer.location}}</span></div><div class="container footer-legal" id="legal-placeholder">{{footer.legalNotice}}</div></footer>
+        <div class="container footer-bottom"><span>© {{year}} YOROZU IT</span><span>{{footer.location}}</span></div>
+        <div class="container footer-legal" id="legal-placeholder">{{footer.legalNotice}}</div>
+    </footer>
 </body>
+
 </html>
