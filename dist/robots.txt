@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yorozuit.de/sitemap.xml
