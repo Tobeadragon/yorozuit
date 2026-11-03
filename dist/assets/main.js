@@ -24,6 +24,20 @@ if (menuButton && navigation) {
     });
 }
 
+const backToTopButton = document.querySelector('.back-to-top');
+if (backToTopButton) {
+    const updateBackToTopVisibility = () => {
+        backToTopButton.classList.toggle('is-visible', window.scrollY >= 100);
+    };
+
+    window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+    updateBackToTopVisibility();
+    backToTopButton.addEventListener('click', () => {
+        const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        window.scrollTo({ top: 0, behavior });
+    });
+}
+
 const form = document.querySelector('#contact-form');
 if (form) {
     const status = document.querySelector('#form-status');

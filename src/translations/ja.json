@@ -1,6 +1,6 @@
 {
   "meta": {"title":"YOROZU IT｜デュッセルドルフのITよろず相談所","description":"デュッセルドルフを拠点に、日本語・ドイツ語・英語でPC、インターネット、ホームページ、スマートホームのお困りごとをサポートします。"},
-  "ui": {"skip":"本文へスキップ","brandSub":"よろずITサポート","menu":"メニューを開く","primaryNav":"メインナビゲーション","navServices":"サービス","navAbout":"当サービスについて","navPricing":"料金","navContact":"お問い合わせ","language":"言語を選択","ctaContact":"相談してみる","ctaServices":"サービスを見る"},
+  "ui": {"skip":"本文へスキップ","brandSub":"よろずITサポート","menu":"メニューを開く","primaryNav":"メインナビゲーション","navServices":"サービス","navAbout":"当サービスについて","navPricing":"料金","navContact":"お問い合わせ","language":"言語を選択","ctaContact":"相談してみる","ctaServices":"サービスを見る","backToTop":"ページ上部へ戻る"},
   "hero": {"eyebrow":"デュッセルドルフのITよろず相談所","title":"PCからインターネット、\nスマートホームまで。","lead":"ITのお困りごと、何でもご相談ください。日本語で、ひとつずつ分かりやすくお手伝いします。","note":"日本語・Deutsch・Englishでご相談いただけます","visualAlt":"ご家庭のネットワークをサポートする画面のイラスト","profileAlt":"事業主のプロフィール写真","cardTitle":"日本語で気軽にご相談ください","cardText":"身近なITの困りごとを一緒に解決","trustLabel":"身近なITを、ひとつの窓口で","trustOne":"個人・ご家庭","trustTwo":"小規模事業者","trustThree":"デュッセルドルフ周辺"},
   "about": {"eyebrow":"WHY YOROZU IT","title":"わからないままにしない、\nあなたの街のIT相談相手。","body":"PCの設定からネット回線、ホームページまで。相談先に迷うようなことも、まずは気軽にお話しください。専門用語をできるだけ使わず、状況と選択肢を丁寧にご説明します。","link":"まずは気軽に相談する"},
   "ownerProfile": {"eyebrow":"OWNER PROFILE","title":"ドイツで36年。日独のIT相談を、わかりやすく。","body":"ドイツで36年間生活してきた経験と、IT・Web開発の実務経験を生かし、日々のIT相談を日本語中心にサポートします。","facts":["ドイツで36年間生活してきた経験","IT・Web開発の実務経験","日本とドイツ双方のビジネスへの理解","日本語を中心としたサポート"],"disclaimer":"これは事業主個人の経験の紹介であり、YOROZU ITの顧客実績・制作実績を示すものではありません。"},
