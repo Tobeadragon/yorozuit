@@ -63,6 +63,61 @@ function renderOptions(items) {
     return items.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
 }
 
+function localizedText(value, lang) {
+    if (typeof value === 'string') return value;
+    return value?.[lang] || value?.en || value?.ja || '';
+}
+
+function serviceTitle(serviceId, translations) {
+    const option = translations.form.serviceOptions.find(([value]) => value === serviceId);
+    return option ? option[1] : '';
+}
+
+function renderOwnerProfile(profile) {
+    return `<section class="owner-profile" aria-labelledby="owner-profile-title"><div class="owner-profile-copy"><p class="eyebrow">${escapeHtml(profile.eyebrow)}</p><h3 id="owner-profile-title">${escapeHtml(profile.title)}</h3><p>${escapeHtml(profile.body)}</p></div><ul class="owner-facts">${profile.facts.map((fact) => `<li>${icon('pin')}<span>${escapeHtml(fact)}</span></li>`).join('')}</ul><p class="owner-profile-note">${escapeHtml(profile.disclaimer)}</p></section>`;
+}
+
+function renderCaseStudies(items, lang, labels, translations) {
+    return items.map((item, index) => `<article class="case-card"><div class="case-card-top"><span class="service-icon">${icon(item.icon)}</span><span class="service-number">CASE ${String(index + 1).padStart(2, '0')}</span></div><h3>${escapeHtml(localizedText(item.title, lang))}</h3><div class="case-block"><h4>${escapeHtml(labels.scenarioLabel)}</h4><p>${escapeHtml(localizedText(item.scenario, lang))}</p></div><div class="case-block"><h4>${escapeHtml(labels.supportLabel)}</h4><ul>${(item.support[lang] || item.support.en || []).map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}</ul></div><a class="card-link" href="#contact">${escapeHtml(labels.contactLink)} <span aria-hidden="true">↗</span></a></article>`).join('');
+}
+
+function projectImageUrl(image) {
+    if (typeof image !== 'string' || !image.trim()) return '';
+    const relativePath = image.replace(/\\/g, '/');
+    if (relativePath.startsWith('/') || relativePath.split('/').includes('..')) return '';
+    return publicPath(`/images/projects/${relativePath}`);
+}
+
+function renderProjects(data, lang, labels, translations) {
+    const items = (data.items || []).filter((item) => item.publication_permission === true);
+    if (items.length === 0) {
+        return `<div class="empty-state"><span class="empty-state-icon">${icon('web')}</span><h3>${escapeHtml(labels.emptyTitle)}</h3><p>${escapeHtml(labels.emptyBody)}</p></div>`;
+    }
+
+    return `<div class="work-grid">${items.map((item) => {
+        const title = localizedText(item.title, lang);
+        const imageUrl = projectImageUrl(item.image);
+        const technologies = Array.isArray(item.technologies) ? item.technologies : [];
+        return `<article class="work-card">${imageUrl ? `<img class="work-image" src="${imageUrl}" alt="${escapeHtml(title)}" loading="lazy" decoding="async">` : ''}<div class="work-card-body"><div class="work-meta"><span>${escapeHtml(serviceTitle(item.service_category, translations) || labels.categoryLabel)}</span>${item.period ? `<time>${escapeHtml(localizedText(item.period, lang))}</time>` : ''}</div><h3>${escapeHtml(title)}</h3><p>${escapeHtml(localizedText(item.work_description, lang))}</p>${technologies.length ? `<div class="work-tools"><span>${escapeHtml(labels.toolsLabel)}</span>${technologies.map((technology) => `<span>${escapeHtml(technology)}</span>`).join('')}</div>` : ''}</div></article>`;
+    }).join('')}</div>`;
+}
+
+function renderReviews(data, lang, labels, translations) {
+    const items = (data.items || []).filter((item) => item.publication_permission === true);
+    if (items.length === 0) {
+        return `<div class="empty-state"><span class="empty-state-icon">${icon('chat')}</span><h3>${escapeHtml(labels.emptyTitle)}</h3><p>${escapeHtml(labels.emptyBody)}</p></div>`;
+    }
+
+    return `<div class="reviews-grid">${items.map((item) => {
+        const reviewLanguage = ['ja', 'de', 'en'].includes(item.language) ? item.language : lang;
+        const rating = Number.isInteger(item.rating) && item.rating >= 1 && item.rating <= 5
+            ? `<span class="review-rating" aria-label="${escapeHtml(labels.ratingLabel)}: ${item.rating}/5">${item.rating}/5</span>`
+            : '';
+        const reviewDate = item.review_date ? `<time>${escapeHtml(item.review_date)}</time>` : '';
+        return `<article class="review-card" lang="${reviewLanguage}"><div class="review-card-top">${escapeHtml(serviceTitle(item.service_category, translations))}${rating}</div><blockquote>${escapeHtml(item.customer_comment)}</blockquote><footer><span>${escapeHtml(item.display_name || labels.anonymous)}</span>${reviewDate}</footer></article>`;
+    }).join('')}</div>`;
+}
+
 function renderHeroArtwork(translations) {
     const profileImage = path.join(root, 'src/images/profile.jpg');
     const logoUrl = publicPath('/assets/logo.svg');
@@ -75,7 +130,7 @@ function renderHeroArtwork(translations) {
     return `<div class="hero-fallback" role="img" aria-label="${escapeHtml(translations.hero.visualAlt)}"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="visual-window"><div class="window-top"><i></i><i></i><i></i><span>yorozu / support</span></div><div class="window-content"><div class="window-sidebar"><b></b><i></i><i></i><i></i></div><div class="window-main"><div class="screen-label">IT HELP, MADE HUMAN</div><div class="screen-line line-wide"></div><div class="screen-line line-mid"></div><div class="screen-card"><span class="screen-icon">Wi-Fi</span><span><b>Home connection</b><small>Connected and ready</small></span><strong>✓</strong></div><div class="screen-bottom"><span></span><span></span><span></span><span></span></div></div></div></div>${profileNote}<div class="hero-stamp"><span>DE</span><span class="stamp-dot"></span><span>JP</span></div></div>`;
 }
 
-function renderPage(lang, translations, template) {
+function renderPage(lang, translations, template, siteData) {
     const route = lang === 'ja' ? '/' : `/${lang}/`;
     const replacements = {
         lang,
@@ -94,8 +149,12 @@ function renderPage(lang, translations, template) {
         deActive: lang === 'de' ? 'is-active' : '',
         enActive: lang === 'en' ? 'is-active' : '',
         heroArtwork: renderHeroArtwork(translations),
+        ownerProfile: renderOwnerProfile(translations.ownerProfile),
         benefits: renderBenefits(translations.benefits),
         serviceCards: renderServices(translations.serviceCards, translations.ui.navContact),
+        caseCards: renderCaseStudies(siteData.caseStudies.items, lang, translations.caseStudies, translations),
+        projectContent: renderProjects(siteData.projects, lang, translations.projectsSection, translations),
+        reviewContent: renderReviews(siteData.reviews, lang, translations.reviewsSection, translations),
         steps: renderSteps(translations.process.steps),
         faqs: renderFaq(translations.faq.items),
         areaList: translations.area.places.map((place) => `<span>${escapeHtml(place)}</span>`).join(''),
@@ -118,10 +177,15 @@ fs.mkdirSync(path.join(dist, 'de'), { recursive: true });
 fs.mkdirSync(path.join(dist, 'en'), { recursive: true });
 fs.mkdirSync(path.join(dist, 'images'), { recursive: true });
 const template = fs.readFileSync(path.join(root, 'src/templates/index.template.html'), 'utf8');
+const siteData = {
+    caseStudies: JSON.parse(fs.readFileSync(path.join(root, 'src/data/case-studies.json'), 'utf8')),
+    projects: JSON.parse(fs.readFileSync(path.join(root, 'src/data/projects.json'), 'utf8')),
+    reviews: JSON.parse(fs.readFileSync(path.join(root, 'src/data/reviews.json'), 'utf8'))
+};
 
 for (const lang of languages) {
     const translations = JSON.parse(fs.readFileSync(path.join(root, `src/translations/${lang}.json`), 'utf8'));
-    const html = renderPage(lang, translations, template);
+    const html = renderPage(lang, translations, template, siteData);
     const output = lang === 'ja' ? path.join(dist, 'index.html') : path.join(dist, lang, 'index.html');
     fs.writeFileSync(output, html);
     console.log(`Built ${path.relative(root, output)}`);
@@ -133,6 +197,8 @@ for (const asset of ['style.css', 'config.js', 'main.js', 'logo.svg']) {
 }
 const profileImage = path.join(root, 'src/images/profile.jpg');
 if (fs.existsSync(profileImage)) fs.copyFileSync(profileImage, path.join(dist, 'images/profile.jpg'));
+const projectImages = path.join(root, 'src/images/projects');
+if (fs.existsSync(projectImages)) fs.cpSync(projectImages, path.join(dist, 'images/projects'), { recursive: true });
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${languages.map((lang) => `  <url><loc>${absoluteUrl(lang === 'ja' ? '/' : `/${lang}/`)}</loc></url>`).join('\n')}\n</urlset>\n`;
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);

@@ -51,4 +51,27 @@ The script creates a `Contact requests` tab and adds a header row when needed. T
 - `.github/workflows/pages.yml`: GitHub Pages build and deployment
 - `dist/`: generated site output
 
+## Content data
+
+- `src/data/case-studies.json`: the five multilingual illustrative enquiry examples. Keep the disclaimer in the translations; these are not client case histories.
+- `src/data/projects.json`: starts empty. Add an item with localized `title`, `work_description`, and `period`, a `service_category` (`general`, `web`, `purchase`, `internet`, or `smart-home`), optional `technologies`, and `publication_permission: true` only after approval. Project images belong under `src/images/projects/`; set `image` to a relative path inside that folder, such as `site-preview.webp`.
+- `src/data/reviews.json`: starts empty. Add the provided `review_id`, `customer_comment`, `service_category`, `display_name`, `review_date`, `language`, optional real `rating`, and `publication_permission: true` only after the reviewer has agreed to publication. Leave `display_name` empty to show the localized anonymous label. Comments are shown in their original language.
+- `src/translations/{ja,de,en}.json`: the owner's supplied personal background and the localized headings and empty-state copy for these sections.
+
+Add a project to the `items` array using localized copy. Project images should be placed in `src/images/projects/` and referenced by a path relative to that directory:
+
+```json
+{
+	"title": {"ja": "制作タイトル", "de": "Projekttitel", "en": "Project title"},
+	"service_category": "web",
+	"work_description": {"ja": "作業内容", "de": "Beschreibung", "en": "Work description"},
+	"technologies": ["HTML", "CSS"],
+	"image": "sample.webp",
+	"period": {"ja": "2026年", "de": "2026", "en": "2026"},
+	"publication_permission": true
+}
+```
+
+Reviews use the requested `review_id`, `customer_comment`, `service_category`, `display_name`, `review_date`, `language`, optional real `rating`, and `publication_permission` fields. Only entries with `publication_permission: true` are shown. Leave `display_name` empty for the localized anonymous label; the comment remains in its original language. Ratings are shown only when an integer from 1 to 5 is provided. No review or rating structured data is generated. Run `npm run build` after editing content data.
+
 Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Replace the clearly marked pricing and legal placeholders and add verified business contact details before production.

@@ -1,0 +1,104 @@
+{
+  "items": [
+    {
+      "id": "case-01",
+      "service_category": "general",
+      "icon": "computer",
+      "title": {
+        "ja": "PCの初期設定・トラブル対応",
+        "de": "PC-Ersteinrichtung und Fehlerbehebung",
+        "en": "PC setup and troubleshooting"
+      },
+      "scenario": {
+        "ja": "新しいパソコンを買ったものの、初期設定や必要なソフトの入れ方が分からない。",
+        "de": "Ein neuer Computer ist da, aber bei Einrichtung oder benötigter Software ist unklar, wie es weitergeht.",
+        "en": "You have a new computer but are unsure how to set it up or install the software you need."
+      },
+      "support": {
+        "ja": ["Windows / Macの初期設定", "ソフトウェアのインストール", "プリンターなど周辺機器の接続", "基本操作の説明"],
+        "de": ["Windows / Mac einrichten", "Software installieren", "Drucker und Peripheriegeräte verbinden", "Grundlegende Bedienung erklären"],
+        "en": ["Set up Windows or Mac", "Install software", "Connect printers and peripherals", "Explain everyday basics"]
+      }
+    },
+    {
+      "id": "case-02",
+      "service_category": "internet",
+      "icon": "wifi",
+      "title": {
+        "ja": "Wi-Fi・インターネットの問題",
+        "de": "Probleme mit WLAN und Internet",
+        "en": "Wi-Fi and internet issues"
+      },
+      "scenario": {
+        "ja": "自宅のWi-Fiが不安定、接続できない、ルーターの設定が分からない。",
+        "de": "Das WLAN zuhause ist instabil, die Verbindung klappt nicht oder die Router-Einstellungen sind unklar.",
+        "en": "Your home Wi-Fi is unstable, the internet will not connect, or router settings are unclear."
+      },
+      "support": {
+        "ja": ["Wi-Fi設定", "ルーター設定", "家庭内ネットワークの確認", "接続トラブルの原因調査"],
+        "de": ["WLAN einrichten", "Router konfigurieren", "Heimnetzwerk prüfen", "Ursachen von Verbindungsproblemen untersuchen"],
+        "en": ["Configure Wi-Fi", "Set up the router", "Check the home network", "Investigate connection issues"]
+      }
+    },
+    {
+      "id": "case-03",
+      "service_category": "purchase",
+      "icon": "devices",
+      "title": {
+        "ja": "PC・周辺機器の購入相談",
+        "de": "Beratung zu PC und Zubehör",
+        "en": "PC and device buying advice"
+      },
+      "scenario": {
+        "ja": "ドイツでパソコンを買いたいが、用途に合う機種が分からない。",
+        "de": "Sie möchten in Deutschland einen PC kaufen und suchen ein passendes Modell für Ihren Bedarf.",
+        "en": "You want to buy a computer in Germany but are unsure which model suits your needs."
+      },
+      "support": {
+        "ja": ["用途に合ったPCの選定", "モニター・プリンターなどの選定", "スペック比較", "購入後の初期設定"],
+        "de": ["PC passend zum Einsatzzweck auswählen", "Monitor und Drucker auswählen", "Ausstattung vergleichen", "Ersteinrichtung nach dem Kauf"],
+        "en": ["Choose a PC for your needs", "Select monitors and printers", "Compare specifications", "Set up the device after purchase"]
+      }
+    },
+    {
+      "id": "case-04",
+      "service_category": "web",
+      "icon": "web",
+      "title": {
+        "ja": "ホームページ制作",
+        "de": "Eine Website erstellen lassen",
+        "en": "Website creation"
+      },
+      "scenario": {
+        "ja": "個人事業や小規模企業のサイトを新しく作りたい、またはリニューアルしたい。",
+        "de": "Für ein Einzelunternehmen oder kleines Unternehmen soll eine neue Website entstehen oder eine bestehende überarbeitet werden.",
+        "en": "You need a new website for an independent business or small company, or want to refresh an existing one."
+      },
+      "support": {
+        "ja": ["ホームページ制作", "デザイン・レイアウト", "スマートフォン対応", "基本的なSEO対策"],
+        "de": ["Website-Erstellung", "Design und Layout", "Darstellung auf Smartphones", "Grundlegende SEO-Maßnahmen"],
+        "en": ["Build a website", "Design and layout", "Mobile-friendly presentation", "Basic SEO support"]
+      }
+    },
+    {
+      "id": "case-05",
+      "service_category": "smart-home",
+      "icon": "home",
+      "title": {
+        "ja": "スマートホーム設定",
+        "de": "Smart-Home-Geräte einrichten",
+        "en": "Smart home setup"
+      },
+      "scenario": {
+        "ja": "スマートテレビ、スピーカー、照明などを自宅のネットワークにつなぎたい。",
+        "de": "Smart-TV, Lautsprecher oder Beleuchtung sollen mit dem Heimnetzwerk verbunden werden.",
+        "en": "You want to connect a smart TV, speaker, lights, or other devices to your home network."
+      },
+      "support": {
+        "ja": ["スマート機器の初期設定", "Wi-Fi接続", "機器間の連携設定", "基本的な動作確認"],
+        "de": ["Smart-Geräte einrichten", "Mit WLAN verbinden", "Geräte miteinander verknüpfen", "Grundfunktionen prüfen"],
+        "en": ["Set up smart devices", "Connect to Wi-Fi", "Link devices together", "Check basic operation"]
+      }
+    }
+  ]
+}
