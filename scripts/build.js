@@ -4,7 +4,19 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const dist = path.join(root, 'dist');
 const languages = ['ja', 'de', 'en'];
-const baseUrl = 'https://yorozuit.de';
+const siteUrl = (process.env.SITE_URL || 'https://yorozuit.de').replace(/\/+$/, '');
+const baseSegments = (process.env.BASE_PATH || '').split('/').filter(Boolean);
+const basePath = baseSegments.length ? `/${baseSegments.join('/')}/` : '';
+
+function publicPath(route) {
+    const relativePath = route.replace(/^\/+/, '');
+    return basePath ? `${basePath}${relativePath}` : `/${relativePath}`;
+}
+
+function absoluteUrl(route) {
+    return `${siteUrl}${publicPath(route)}`;
+}
+
 const iconPaths = {
     chat: '<path d="M5 6.5h14v9H11l-5 3v-3H5z"/><path d="M9 10h6M9 13h4"/>',
     spark: '<path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
@@ -55,13 +67,21 @@ function renderPage(lang, translations, template) {
     const route = lang === 'ja' ? '/' : `/${lang}/`;
     const replacements = {
         lang,
-        canonical: `${baseUrl}${route}`,
-        homeUrl: route,
+        canonical: absoluteUrl(route),
+        alternateJa: absoluteUrl('/'),
+        alternateDe: absoluteUrl('/de/'),
+        alternateEn: absoluteUrl('/en/'),
+        alternateDefault: absoluteUrl('/'),
+        assetBase: publicPath('/assets'),
+        jaUrl: publicPath('/'),
+        deUrl: publicPath('/de/'),
+        enUrl: publicPath('/en/'),
+        homeUrl: publicPath(route),
         year: new Date().getFullYear(),
         jaActive: lang === 'ja' ? 'is-active' : '',
         deActive: lang === 'de' ? 'is-active' : '',
         enActive: lang === 'en' ? 'is-active' : '',
-        profileImage: fs.existsSync(path.join(root, 'src/images/profile.jpg')) ? '<img src="/images/profile.jpg" alt="">' : 'Y',
+        profileImage: fs.existsSync(path.join(root, 'src/images/profile.jpg')) ? `<img src="${publicPath('/images/profile.jpg')}" alt="">` : 'Y',
         benefits: renderBenefits(translations.benefits),
         serviceCards: renderServices(translations.serviceCards, translations.ui.navContact),
         steps: renderSteps(translations.process.steps),
@@ -102,7 +122,7 @@ for (const asset of ['style.css', 'config.js', 'main.js', 'logo.svg']) {
 const profileImage = path.join(root, 'src/images/profile.jpg');
 if (fs.existsSync(profileImage)) fs.copyFileSync(profileImage, path.join(dist, 'images/profile.jpg'));
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${languages.map((lang) => `  <url><loc>${baseUrl}${lang === 'ja' ? '/' : `/${lang}/`}</loc></url>`).join('\n')}\n</urlset>\n`;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${languages.map((lang) => `  <url><loc>${absoluteUrl(lang === 'ja' ? '/' : `/${lang}/`)}</loc></url>`).join('\n')}\n</urlset>\n`;
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);
-fs.writeFileSync(path.join(dist, 'robots.txt'), 'User-agent: *\nAllow: /\nSitemap: https://yorozuit.de/sitemap.xml\n');
+fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${absoluteUrl('/sitemap.xml')}\n`);
 console.log('Built sitemap.xml and robots.txt');

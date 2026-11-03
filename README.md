@@ -16,6 +16,17 @@ npm start
 
 Open <http://127.0.0.1:4173> for Japanese, `/de/` for German, and `/en/` for English. The server serves the generated `dist/` folder.
 
+## GitHub Pages
+
+The generated site is in `dist/`, so publishing the repository root displays GitHub's README instead of the landing page. A GitHub Actions workflow builds and publishes `dist/` when you push to `main`.
+
+1. Push `.github/workflows/pages.yml` to the `main` branch.
+2. In the repository, open **Settings > Pages** and set **Build and deployment > Source** to **GitHub Actions**.
+3. Wait for the **Deploy static site to GitHub Pages** workflow to finish in the **Actions** tab.
+4. Open the Pages URL shown in the deployment or Settings page. For this repository it is normally `https://tobeadragon.github.io/yorozuit/`.
+
+The workflow builds links with the `/yorozuit/` project path, so assets and language switching work on GitHub Pages.
+
 ## Google Sheets connection
 
 The form sends JSON to a Google Apps Script web app. The spreadsheet ID stays in Apps Script and is not included in the public site.
@@ -37,6 +48,7 @@ The script creates a `Contact requests` tab and adds a header row when needed. T
 - `src/js/config.js`: public Google Apps Script web app URL setting
 - `apps-script/Code.gs`: Google Sheets receiver to deploy in your Apps Script project
 - `scripts/build.js`: static page, sitemap and robots.txt generator
+- `.github/workflows/pages.yml`: GitHub Pages build and deployment
 - `dist/`: generated site output
 
 Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Replace the clearly marked pricing and legal placeholders and add verified business contact details before production.
