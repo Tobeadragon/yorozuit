@@ -17,6 +17,11 @@ function absoluteUrl(route) {
     return `${siteUrl}${publicPath(route)}`;
 }
 
+const pngLogo = path.join(root, 'src/images/yorozu_logo.png');
+const logoAsset = fs.existsSync(pngLogo) ? 'yorozu_logo.png' : 'logo.svg';
+const logoUrl = publicPath(`/assets/${logoAsset}`);
+const logoMimeType = logoAsset.endsWith('.png') ? 'image/png' : 'image/svg+xml';
+
 const iconPaths = {
     chat: '<path d="M5 6.5h14v9H11l-5 3v-3H5z"/><path d="M9 10h6M9 13h4"/>',
     spark: '<path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="m19 15 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
@@ -120,7 +125,6 @@ function renderReviews(data, lang, labels, translations) {
 
 function renderHeroArtwork(translations) {
     const profileImage = path.join(root, 'src/images/profile.jpg');
-    const logoUrl = publicPath('/assets/logo.svg');
     const profileNote = `<figcaption class="profile-note"><span class="profile-avatar"><img src="${logoUrl}" alt=""></span><span><strong>${escapeHtml(translations.hero.cardTitle)}</strong><small>${escapeHtml(translations.hero.cardText)}</small></span><span class="profile-mark" aria-hidden="true">✳</span></figcaption>`;
 
     if (fs.existsSync(profileImage)) {
@@ -144,6 +148,8 @@ function renderPage(lang, translations, template, siteData) {
         deUrl: publicPath('/de/'),
         enUrl: publicPath('/en/'),
         homeUrl: publicPath(route),
+        logoUrl,
+        logoMimeType,
         year: new Date().getFullYear(),
         jaActive: lang === 'ja' ? 'is-active' : '',
         deActive: lang === 'de' ? 'is-active' : '',
@@ -195,6 +201,7 @@ for (const asset of ['style.css', 'config.js', 'main.js', 'logo.svg']) {
     const source = asset === 'style.css' ? 'src/css/style.css' : asset === 'config.js' ? 'src/js/config.js' : asset === 'main.js' ? 'src/js/main.js' : 'src/images/logo.svg';
     fs.copyFileSync(path.join(root, source), path.join(dist, 'assets', asset));
 }
+if (fs.existsSync(pngLogo)) fs.copyFileSync(pngLogo, path.join(dist, 'assets', logoAsset));
 const profileImage = path.join(root, 'src/images/profile.jpg');
 if (fs.existsSync(profileImage)) fs.copyFileSync(profileImage, path.join(dist, 'images/profile.jpg'));
 const projectImages = path.join(root, 'src/images/projects');
