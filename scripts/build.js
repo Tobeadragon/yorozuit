@@ -63,6 +63,18 @@ function renderOptions(items) {
     return items.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
 }
 
+function renderHeroArtwork(translations) {
+    const profileImage = path.join(root, 'src/images/profile.jpg');
+    const logoUrl = publicPath('/assets/logo.svg');
+    const profileNote = `<figcaption class="profile-note"><span class="profile-avatar"><img src="${logoUrl}" alt=""></span><span><strong>${escapeHtml(translations.hero.cardTitle)}</strong><small>${escapeHtml(translations.hero.cardText)}</small></span><span class="profile-mark" aria-hidden="true">✳</span></figcaption>`;
+
+    if (fs.existsSync(profileImage)) {
+        return `<figure class="hero-portrait"><img class="hero-photo" src="${publicPath('/images/profile.jpg')}" alt="${escapeHtml(translations.hero.profileAlt)}">${profileNote}</figure>`;
+    }
+
+    return `<div class="hero-fallback" role="img" aria-label="${escapeHtml(translations.hero.visualAlt)}"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="visual-window"><div class="window-top"><i></i><i></i><i></i><span>yorozu / support</span></div><div class="window-content"><div class="window-sidebar"><b></b><i></i><i></i><i></i></div><div class="window-main"><div class="screen-label">IT HELP, MADE HUMAN</div><div class="screen-line line-wide"></div><div class="screen-line line-mid"></div><div class="screen-card"><span class="screen-icon">Wi-Fi</span><span><b>Home connection</b><small>Connected and ready</small></span><strong>✓</strong></div><div class="screen-bottom"><span></span><span></span><span></span><span></span></div></div></div></div>${profileNote}<div class="hero-stamp"><span>DE</span><span class="stamp-dot"></span><span>JP</span></div></div>`;
+}
+
 function renderPage(lang, translations, template) {
     const route = lang === 'ja' ? '/' : `/${lang}/`;
     const replacements = {
@@ -81,7 +93,7 @@ function renderPage(lang, translations, template) {
         jaActive: lang === 'ja' ? 'is-active' : '',
         deActive: lang === 'de' ? 'is-active' : '',
         enActive: lang === 'en' ? 'is-active' : '',
-        profileImage: fs.existsSync(path.join(root, 'src/images/profile.jpg')) ? `<img src="${publicPath('/images/profile.jpg')}" alt="">` : 'Y',
+        heroArtwork: renderHeroArtwork(translations),
         benefits: renderBenefits(translations.benefits),
         serviceCards: renderServices(translations.serviceCards, translations.ui.navContact),
         steps: renderSteps(translations.process.steps),
