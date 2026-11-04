@@ -2,18 +2,18 @@ export const businessInfo = {
   businessName: "YOROZU IT",
   legalForm: "Einzelunternehmen",
 
-  ownerName: "",
+  ownerName: "Tatsuya Yamashita",
 
   address: {
-    street: "",
-    postalCode: "",
+    street: "Heresbachstraße 8",
+    postalCode: "40223",
     city: "Düsseldorf",
     country: "Deutschland",
   },
 
   contact: {
-    email: "",
-    telephone: "",
+    email: "info@yorozuit.de",
+    telephone: "+49 151 22644506",
   },
 
   tax: {
@@ -27,7 +27,7 @@ export const businessInfo = {
 
   responsiblePerson: {
     name: "",
-    address: "",
+    address: "Heresbachstraße 8, 40223 Düsseldorf, Deutschland",
   },
 };
 
