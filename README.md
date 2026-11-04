@@ -59,27 +59,48 @@ The script creates a `Contact requests` tab and adds a header row when needed. T
 - `.github/workflows/pages.yml`: GitHub Pages build and deployment
 - `dist/`: generated site output
 
-## Content data
+## Add project examples and customer reviews
 
-- `src/data/case-studies.json`: the five multilingual illustrative enquiry examples. Keep the disclaimer in the translations; these are not client case histories.
-- `src/data/projects.json`: starts empty. Add an item with localized `title`, `work_description`, and `period`, a `service_category` (`general`, `web`, `purchase`, `internet`, or `smart-home`), optional `technologies`, and `publication_permission: true` only after approval. Project images belong under `src/images/projects/`; set `image` to a relative path inside that folder, such as `site-preview.webp`.
-- `src/data/reviews.json`: starts empty. Add the provided `review_id`, `customer_comment`, `service_category`, `display_name`, `review_date`, `language`, optional real `rating`, and `publication_permission: true` only after the reviewer has agreed to publication. Leave `display_name` empty to show the localized anonymous label. Comments are shown in their original language.
-- `src/translations/{ja,de,en}.json`: the owner's supplied personal background and the localized headings and empty-state copy for these sections.
+The project examples and reviews are content-managed as JSON, independently of the page layout. Each file has an `items` array, so add one object per entry; the renderer displays every approved entry in that array. There is no fixed item limit. The site is static, so rebuild and push the changes to publish them:
 
-Add a project to the `items` array using localized copy. Project images should be placed in `src/images/projects/` and referenced by a path relative to that directory:
+1. Edit `src/data/projects.json` and/or `src/data/reviews.json`.
+2. Add another object inside the existing `"items": [...]` array. Use a unique kebab-case ID for each record.
+3. Keep `"publication_permission": false` until you have the person's/customer's written permission and any necessary image rights. Change it to `true` only for approved content.
+4. Put project images in `src/images/projects/` and use a relative path for the `image` value. Omit `image` if there is no approved image.
+5. Run `npm run build`, review the local site, then commit and push. The GitHub Pages workflow rebuilds all languages and publishes the updated entries.
+
+The build validates each record and stops with the file/field that needs attention. Projects require `project_id`, localized `title` and `work_description` in JA/DE/EN, a supported `service_category` (`general`, `web`, `purchase`, `internet`, `smart-home`, or `other`), and a boolean `publication_permission`. `period` may be a shared string or localized object; `technologies` and `image` are optional.
 
 ```json
 {
-	"title": {"ja": "制作タイトル", "de": "Projekttitel", "en": "Project title"},
-	"service_category": "web",
-	"work_description": {"ja": "作業内容", "de": "Beschreibung", "en": "Work description"},
-	"technologies": ["HTML", "CSS"],
-	"image": "sample.webp",
-	"period": {"ja": "2026年", "de": "2026", "en": "2026"},
-	"publication_permission": true
+  "project_id": "unique-project-slug",
+  "title": {"ja": "（掲載する日本語タイトル）", "de": "（掲載するドイツ語タイトル）", "en": "（掲載する英語タイトル）"},
+  "service_category": "web",
+  "work_description": {"ja": "（日本語の説明）", "de": "（ドイツ語の説明）", "en": "（英語の説明）"},
+  "technologies": ["HTML", "CSS"],
+  "image": "project-image.webp",
+  "period": {"ja": "2026年", "de": "2026", "en": "2026"},
+  "publication_permission": false
 }
 ```
 
-Reviews use the requested `review_id`, `customer_comment`, `service_category`, `display_name`, `review_date`, `language`, optional real `rating`, and `publication_permission` fields. Only entries with `publication_permission: true` are shown. Leave `display_name` empty for the localized anonymous label; the comment remains in its original language. Ratings are shown only when an integer from 1 to 5 is provided. No review or rating structured data is generated. Run `npm run build` after editing content data.
+Reviews require a unique `review_id`, the original non-empty `customer_comment`, `service_category`, `display_name` (empty string to display anonymously), valid `review_date` in `YYYY-MM-DD` format, `language` (`ja`, `de`, or `en`), and a boolean `publication_permission`. `rating` is optional and, when included, must be an integer from 1 to 5. The comment is displayed in its original language; do not translate, alter, or invent customer feedback. Keep a record of consent outside the public repository. No review/rating structured data is generated.
 
-Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Before production, add verified business contact details in `scripts/build.js`, review the legal content for the actual business and hosting arrangement, and replace the clearly marked pricing placeholder. The legal pages must not be treated as publication-ready while their draft warning is shown.
+```json
+{
+  "review_id": "unique-review-slug",
+  "customer_comment": "（掲載同意を得た原文の感想）",
+  "service_category": "general",
+  "display_name": "",
+  "review_date": "2026-01-31",
+  "language": "ja",
+  "rating": 5,
+  "publication_permission": false
+}
+```
+
+The snippets above are field templates only; replace every example value with verified content before adding them to `items`. Never put private customer information or unapproved materials in the public repository, even when `publication_permission` is false. The build rejects duplicate IDs, missing translations, invalid categories or dates, and missing project image files.
+
+`src/data/case-studies.json` contains illustrative enquiries, not real project or customer references. Its existing disclaimer must remain. `src/translations/{ja,de,en}.json` contains the section headings and empty-state copy.
+
+Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Before production, review the legal content for the actual business and hosting arrangement, and replace the clearly marked pricing placeholder. The legal pages must not be treated as publication-ready while their draft warning is shown.

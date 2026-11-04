@@ -168,6 +168,108 @@ function renderReviews(data, lang, labels, translations) {
     }).join('')}</div>`;
 }
 
+function validateContentData(data) {
+    const supportedServices = new Set(['general', 'web', 'purchase', 'internet', 'smart-home', 'other']);
+    const localizedFields = (value, label) => {
+        if (typeof value === 'string') {
+            if (!value.trim()) throw new Error(`${label} must not be empty`);
+            return;
+        }
+        if (!value || typeof value !== 'object' || Array.isArray(value)) {
+            throw new Error(`${label} must be a non-empty string or translations for ja, de, and en`);
+        }
+        for (const lang of languages) {
+            if (typeof value[lang] !== 'string' || !value[lang].trim()) {
+                throw new Error(`${label}.${lang} must be a non-empty string`);
+            }
+        }
+    };
+    const uniqueId = (id, label, seen) => {
+        if (typeof id !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) {
+            throw new Error(`${label} must be a unique kebab-case ID`);
+        }
+        if (seen.has(id)) throw new Error(`${label} "${id}" is duplicated`);
+        seen.add(id);
+    };
+
+    for (const [collectionName, collection] of [['projects', data.projects], ['reviews', data.reviews]]) {
+        if (!collection || !Array.isArray(collection.items)) {
+            throw new Error(`src/data/${collectionName}.json must contain an "items" array`);
+        }
+    }
+
+    const projectIds = new Set();
+    const projectImages = path.join(root, 'src/images/projects');
+    data.projects.items.forEach((project, index) => {
+        const label = `projects.items[${index}]`;
+        if (!project || typeof project !== 'object' || Array.isArray(project)) {
+            throw new Error(`${label} must be an object`);
+        }
+        uniqueId(project.project_id, `${label}.project_id`, projectIds);
+        localizedFields(project.title, `${label}.title`);
+        localizedFields(project.work_description, `${label}.work_description`);
+        if (!supportedServices.has(project.service_category)) {
+            throw new Error(`${label}.service_category must be one of: ${[...supportedServices].join(', ')}`);
+        }
+        if (project.period !== undefined) localizedFields(project.period, `${label}.period`);
+        if (project.technologies !== undefined &&
+            (!Array.isArray(project.technologies) ||
+                project.technologies.some((technology) => typeof technology !== 'string' || !technology.trim()))) {
+            throw new Error(`${label}.technologies must be an array of non-empty strings`);
+        }
+        if (project.image !== undefined && project.image !== '') {
+            if (typeof project.image !== 'string' || path.isAbsolute(project.image) ||
+                project.image.replace(/\\/g, '/').split('/').includes('..')) {
+                throw new Error(`${label}.image must be a path relative to src/images/projects`);
+            }
+            const imagePath = path.resolve(projectImages, project.image);
+            if (!imagePath.startsWith(`${projectImages}${path.sep}`) || !fs.existsSync(imagePath) ||
+                !fs.statSync(imagePath).isFile()) {
+                throw new Error(`${label}.image does not exist under src/images/projects`);
+            }
+        }
+        if (typeof project.publication_permission !== 'boolean') {
+            throw new Error(`${label}.publication_permission must be true or false`);
+        }
+    });
+
+    const reviewIds = new Set();
+    data.reviews.items.forEach((review, index) => {
+        const label = `reviews.items[${index}]`;
+        if (!review || typeof review !== 'object' || Array.isArray(review)) {
+            throw new Error(`${label} must be an object`);
+        }
+        uniqueId(review.review_id, `${label}.review_id`, reviewIds);
+        if (typeof review.customer_comment !== 'string' || !review.customer_comment.trim()) {
+            throw new Error(`${label}.customer_comment must be a non-empty, approved customer comment`);
+        }
+        if (typeof review.display_name !== 'string') {
+            throw new Error(`${label}.display_name must be a string (use an empty string for anonymous display)`);
+        }
+        if (!languages.includes(review.language)) {
+            throw new Error(`${label}.language must be one of: ${languages.join(', ')}`);
+        }
+        if (!supportedServices.has(review.service_category)) {
+            throw new Error(`${label}.service_category must be one of: ${[...supportedServices].join(', ')}`);
+        }
+        const parsedReviewDate = typeof review.review_date === 'string' &&
+            /^\d{4}-\d{2}-\d{2}$/.test(review.review_date)
+            ? new Date(`${review.review_date}T00:00:00Z`)
+            : null;
+        if (!parsedReviewDate || Number.isNaN(parsedReviewDate.getTime()) ||
+            parsedReviewDate.toISOString().slice(0, 10) !== review.review_date) {
+            throw new Error(`${label}.review_date must be a valid YYYY-MM-DD date`);
+        }
+        if (review.rating !== undefined &&
+            (!Number.isInteger(review.rating) || review.rating < 1 || review.rating > 5)) {
+            throw new Error(`${label}.rating must be an integer from 1 to 5 when provided`);
+        }
+        if (review.publication_permission !== true && review.publication_permission !== false) {
+            throw new Error(`${label}.publication_permission must be true or false`);
+        }
+    });
+}
+
 function renderHeroArtwork(translations) {
     const profileImage = path.join(root, 'src/images/profile.jpg');
     const profileNote = `<figcaption class="profile-note"><span class="profile-avatar"><img src="${logoUrl}" alt=""></span><span><strong>${escapeHtml(translations.hero.cardTitle)}</strong><small>${escapeHtml(translations.hero.cardText)}</small></span><span class="profile-mark" aria-hidden="true">✳</span></figcaption>`;
@@ -271,7 +373,7 @@ function renderLegalPage(template, page) {
         };
         if (!Object.hasOwn(contentValues, key)) throw new Error(`Unknown legal content placeholder "${key}"`);
         return contentValues[key];
-    });
+    }).replace(/^[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n');
     const replacements = {
         title: `${page.title} – ${businessInfo.businessName}`,
         description: `${page.description} ${businessInfo.businessName}.`,
@@ -303,7 +405,7 @@ function renderLegalPage(template, page) {
     return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
         if (!Object.hasOwn(replacements, key)) throw new Error(`Unknown legal template placeholder "${key}"`);
         return replacements[key];
-    });
+    }).replace(/^[ \t]+$/gm, '');
 }
 
 fs.mkdirSync(path.join(dist, 'assets'), { recursive: true });
@@ -317,6 +419,7 @@ const siteData = {
     projects: JSON.parse(fs.readFileSync(path.join(root, 'src/data/projects.json'), 'utf8')),
     reviews: JSON.parse(fs.readFileSync(path.join(root, 'src/data/reviews.json'), 'utf8'))
 };
+validateContentData(siteData);
 
 for (const lang of languages) {
     const translations = JSON.parse(fs.readFileSync(path.join(root, `src/translations/${lang}.json`), 'utf8'));
