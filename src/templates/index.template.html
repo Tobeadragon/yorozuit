@@ -13,11 +13,6 @@
     <link rel="alternate" hreflang="en" href="{{alternateEn}}">
     <link rel="alternate" hreflang="x-default" href="{{alternateDefault}}">
     <link rel="icon" href="{{logoUrl}}" type="{{logoMimeType}}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="{{assetBase}}/style.css">
     <script src="{{assetBase}}/config.js" defer></script>
     <script src="{{assetBase}}/main.js" defer></script>
@@ -217,7 +212,8 @@
                             data-error="service"></span></label><label>{{form.messageLabel}}<textarea name="message"
                             rows="5" required minlength="10" placeholder="{{form.messagePlaceholder}}"></textarea><span
                             class="field-error" data-error="message"></span></label><label class="consent"><input
-                            type="checkbox" name="consent" required><span>{{form.consent}}</span></label><span
+                            type="checkbox" name="consent" required><span>{{form.consentBefore}}<a
+                                href="{{privacyUrl}}">{{form.consentLink}}</a>{{form.consentAfter}}</span></label><span
                         class="field-error" data-error="consent"></span><input name="website" type="text" tabindex="-1"
                         autocomplete="off" hidden><button class="button button-primary submit-button"
                         type="submit">{{form.submit}} <span aria-hidden="true">↗</span></button>
@@ -233,12 +229,10 @@
                         IT</strong><small>{{ui.brandSub}}</small></span></a>
             <p>{{footer.tagline}}</p>
             <div class="footer-links"><a href="#services">{{ui.navServices}}</a><a
-                    href="#contact">{{ui.navContact}}</a><a href="#legal-placeholder">Impressum
-                    <small>{{footer.placeholder}}</small></a><a href="#legal-placeholder">Datenschutz
-                    <small>{{footer.placeholder}}</small></a></div>
+                    href="#contact">{{ui.navContact}}</a><a href="{{impressumUrl}}">Impressum</a><a
+                    href="{{privacyUrl}}">Datenschutz</a></div>
         </div>
         <div class="container footer-bottom"><span>© {{year}} YOROZU IT</span><span>{{footer.location}}</span></div>
-        <div class="container footer-legal" id="legal-placeholder">{{footer.legalNotice}}</div>
     </footer>
     <button class="back-to-top" type="button" aria-label="{{ui.backToTop}}" title="{{ui.backToTop}}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"

@@ -7,6 +7,44 @@ const languages = ['ja', 'de', 'en'];
 const siteUrl = (process.env.SITE_URL || 'https://yorozuit.de').replace(/\/+$/, '');
 const baseSegments = (process.env.BASE_PATH || '').split('/').filter(Boolean);
 const basePath = baseSegments.length ? `/${baseSegments.join('/')}/` : '';
+const legalInfoSource = fs.readFileSync(path.join(root, 'src/config/businessInfo.ts'), 'utf8');
+const legalInfoModule = { exports: {} };
+const legalInfoCode = `${legalInfoSource.replace(/\bexport\s+const\s+/g, 'const ')}\nmodule.exports = { businessInfo, legalInformationComplete };`;
+require('node:vm').runInNewContext(legalInfoCode, { module: legalInfoModule, exports: legalInfoModule.exports });
+const { businessInfo, legalInformationComplete } = legalInfoModule.exports;
+const developmentBuild = process.env.NODE_ENV !== 'production';
+const legalUpdatedAt = '4. November 2026';
+const requiredBusinessInformation = [
+    ['Unternehmensname', businessInfo.businessName],
+    ['Rechtsform', businessInfo.legalForm],
+    ['vollständiger Name der Inhaberin oder des Inhabers', businessInfo.ownerName],
+    ['Straße und Hausnummer', businessInfo.address.street],
+    ['Postleitzahl', businessInfo.address.postalCode],
+    ['Ort', businessInfo.address.city],
+    ['Land', businessInfo.address.country],
+    ['geschäftliche E-Mail-Adresse', businessInfo.contact.email]
+];
+const missingRequiredInformation = requiredBusinessInformation
+    .filter(([, value]) => typeof value !== 'string' || !value.trim())
+    .map(([label]) => label);
+if ((businessInfo.responsiblePerson.name.trim() || businessInfo.responsiblePerson.address.trim()) &&
+    (!businessInfo.responsiblePerson.name.trim() || !businessInfo.responsiblePerson.address.trim())) {
+    missingRequiredInformation.push('vollständige Angaben zur verantwortlichen Person');
+}
+
+if (!legalInformationComplete && !developmentBuild) {
+    throw new Error('Production build blocked: complete required business information in src/config/businessInfo.ts before publishing legal pages.');
+}
+if (!legalInformationComplete) {
+    console.warn(`Development warning: legal information is incomplete (${missingRequiredInformation.join(', ')}). Legal pages will contain development-only placeholders and must not be published.`);
+}
+
+const configSource = fs.readFileSync(path.join(root, 'src/js/config.js'), 'utf8');
+const formEndpoint = configSource.match(/googleSheetsWebAppUrl:\s*(['"])(.*?)\1/);
+if (!formEndpoint) throw new Error('Could not verify the contact form endpoint in src/js/config.js');
+if (formEndpoint[2].trim()) {
+    throw new Error('The contact form endpoint is configured. Update and verify the privacy notice before building.');
+}
 
 function publicPath(route) {
     const relativePath = route.replace(/^\/+/, '');
@@ -155,6 +193,8 @@ function renderPage(lang, translations, template, siteData) {
         deUrl: publicPath('/de/'),
         enUrl: publicPath('/en/'),
         homeUrl: publicPath(route),
+        impressumUrl: publicPath('/impressum/'),
+        privacyUrl: publicPath('/datenschutz/'),
         logoUrl,
         logoMimeType,
         heroProfileClass: fs.existsSync(path.join(root, 'src/images/profile.jpg')) ? 'hero-has-profile' : '',
@@ -190,11 +230,88 @@ function renderPage(lang, translations, template, siteData) {
     });
 }
 
+function renderLegalPage(template, page) {
+    const developmentValue = (value) => value.trim()
+        ? escapeHtml(value.trim())
+        : developmentBuild ? '<span class="legal-placeholder">[Bitte Geschäftsdaten ergänzen]</span>' : '';
+    const address = `<address>${[
+        developmentValue(businessInfo.address.street),
+        `${developmentValue(businessInfo.address.postalCode)} ${developmentValue(businessInfo.address.city)}`,
+        developmentValue(businessInfo.address.country)
+    ].join('<br>')}</address>`;
+    const email = businessInfo.contact.email.trim()
+        ? `<p>E-Mail: <a href="mailto:${escapeHtml(businessInfo.contact.email.trim())}">${escapeHtml(businessInfo.contact.email.trim())}</a></p>`
+        : developmentBuild ? `<p>E-Mail: ${developmentValue(businessInfo.contact.email)}</p>` : '';
+    const telephone = businessInfo.contact.telephone.trim()
+        ? `<p>Telefon: <a href="tel:${escapeHtml(businessInfo.contact.telephone.trim())}">${escapeHtml(businessInfo.contact.telephone.trim())}</a></p>`
+        : developmentBuild ? `<p>Telefon: ${developmentValue(businessInfo.contact.telephone)}</p>` : '';
+    const vatSection = businessInfo.tax.vatId.trim()
+        ? `<section><h2>Umsatzsteuer-Identifikationsnummer</h2><p>Umsatzsteuer-Identifikationsnummer (USt-IdNr.) gemäß § 27a Umsatzsteuergesetz: ${escapeHtml(businessInfo.tax.vatId.trim())}</p></section>`
+        : '';
+    const responsiblePerson = businessInfo.responsiblePerson.name.trim() || businessInfo.responsiblePerson.address.trim()
+        ? `<section><h2>Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV</h2><p>${developmentValue(businessInfo.responsiblePerson.name)}</p><p>${developmentValue(businessInfo.responsiblePerson.address)}</p></section>`
+        : '';
+    const draftNotice = !legalInformationComplete
+        ? `<aside class="legal-draft-notice" role="note"><strong>Entwurf – nicht veröffentlichungsreif</strong><p>Es fehlen oder sind unvollständig: ${missingRequiredInformation.map(escapeHtml).join(', ')}. Platzhalter werden nur in Entwicklungs-Builds angezeigt. Diese Seite darf nicht veröffentlicht werden.</p></aside>`
+        : '';
+    const legalContent = page.content.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        const contentValues = {
+            address,
+            businessName: escapeHtml(businessInfo.businessName.trim()),
+            legalForm: escapeHtml(businessInfo.legalForm.trim()),
+            ownerName: developmentValue(businessInfo.ownerName),
+            email,
+            emailAvailability: businessInfo.contact.email.trim()
+                ? 'Sie erreichen uns unter der oben angegebenen geschäftlichen E-Mail-Adresse.'
+                : 'Eine geschäftliche E-Mail-Adresse ist noch nicht veröffentlicht.',
+            telephone,
+            vatSection,
+            responsiblePerson,
+            currentDate: legalUpdatedAt
+        };
+        if (!Object.hasOwn(contentValues, key)) throw new Error(`Unknown legal content placeholder "${key}"`);
+        return contentValues[key];
+    });
+    const replacements = {
+        title: `${page.title} – ${businessInfo.businessName}`,
+        description: `${page.description} ${businessInfo.businessName}.`,
+        robots: legalInformationComplete ? 'index,follow' : 'noindex,follow',
+        canonical: absoluteUrl(`/${page.slug}/`),
+        logoUrl,
+        logoMimeType,
+        assetBase: publicPath('/assets'),
+        homeUrl: publicPath('/'),
+        homeServicesUrl: `${publicPath('/')}#services`,
+        homeContactUrl: `${publicPath('/')}#contact`,
+        jaUrl: publicPath('/'),
+        deUrl: publicPath('/de/'),
+        enUrl: publicPath('/en/'),
+        impressumUrl: publicPath('/impressum/'),
+        privacyUrl: publicPath('/datenschutz/'),
+        impressumCurrent: page.slug === 'impressum' ? 'aria-current="page"' : '',
+        privacyCurrent: page.slug === 'datenschutz' ? 'aria-current="page"' : '',
+        year: new Date().getFullYear(),
+        breadcrumb: page.heading,
+        heading: page.heading,
+        headingMarkup: page.slug === 'datenschutz' ? 'Datenschutz&shy;erklärung' : page.heading,
+        lead: page.lead,
+        draftNotice,
+        currentDate: legalUpdatedAt,
+        content: legalContent
+    };
+
+    return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+        if (!Object.hasOwn(replacements, key)) throw new Error(`Unknown legal template placeholder "${key}"`);
+        return replacements[key];
+    });
+}
+
 fs.mkdirSync(path.join(dist, 'assets'), { recursive: true });
 fs.mkdirSync(path.join(dist, 'de'), { recursive: true });
 fs.mkdirSync(path.join(dist, 'en'), { recursive: true });
 fs.mkdirSync(path.join(dist, 'images'), { recursive: true });
 const template = fs.readFileSync(path.join(root, 'src/templates/index.template.html'), 'utf8');
+const legalTemplate = fs.readFileSync(path.join(root, 'src/templates/legal.template.html'), 'utf8');
 const siteData = {
     caseStudies: JSON.parse(fs.readFileSync(path.join(root, 'src/data/case-studies.json'), 'utf8')),
     projects: JSON.parse(fs.readFileSync(path.join(root, 'src/data/projects.json'), 'utf8')),
@@ -205,6 +322,55 @@ for (const lang of languages) {
     const translations = JSON.parse(fs.readFileSync(path.join(root, `src/translations/${lang}.json`), 'utf8'));
     const html = renderPage(lang, translations, template, siteData);
     const output = lang === 'ja' ? path.join(dist, 'index.html') : path.join(dist, lang, 'index.html');
+    fs.writeFileSync(output, html);
+    console.log(`Built ${path.relative(root, output)}`);
+}
+
+// The current site contains service information, not journalistic-editorial content under § 18 Abs. 2 MStV.
+const legalPages = [
+    {
+        slug: 'impressum',
+        title: 'Impressum',
+        description: 'Impressum und Anbieterkennzeichnung gemäß § 5 DDG.',
+        heading: 'Impressum',
+        lead: 'Rechtliche Informationen gemäß § 5 DDG',
+        content: `        <section><h2>Angaben gemäß § 5 DDG</h2><p>Angaben zum Diensteanbieter von {{businessName}}.</p></section>
+        <section><h2>Name und Anschrift des Diensteanbieters</h2><p><strong>{{businessName}} – {{legalForm}}</strong><br>{{ownerName}}</p>{{address}}</section>
+            <section><h2>Kontakt</h2>{{email}}{{telephone}}</section>
+            {{vatSection}}
+        {{responsiblePerson}}
+            <section><h2>Haftung für Inhalte</h2><p>Für eigene Inhalte auf diesen Seiten sind wir nach den allgemeinen Gesetzen verantwortlich. Für die Vollständigkeit, Richtigkeit und Aktualität der Inhalte können wir dennoch keine Gewähr übernehmen. Soweit gesetzliche Haftungsprivilegierungen für übermittelte oder gespeicherte fremde Informationen gelten, bleiben diese unberührt. Bei Bekanntwerden konkreter Rechtsverletzungen entfernen wir betroffene Inhalte unverzüglich.</p></section>
+            <section><h2>Haftung für Links</h2><p>Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Für diese fremden Inhalte können wir daher keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Bei Verlinkung waren keine rechtswidrigen Inhalte erkennbar. Eine laufende Kontrolle verlinkter Seiten ist ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen entfernen wir betroffene Links unverzüglich.</p></section>
+            <section><h2>Urheberrecht</h2><p>Die durch den Diensteanbieter erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der vorherigen schriftlichen Zustimmung des jeweiligen Rechteinhabers. Inhalte Dritter werden als solche kenntlich gemacht; Rechte Dritter bleiben unberührt.</p></section>
+            <p class="legal-updated">Stand: {{currentDate}}</p>`
+    },
+    {
+        slug: 'datenschutz',
+        title: 'Datenschutzerklärung',
+        description: 'Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO und TDDDG.',
+        heading: 'Datenschutzerklärung',
+        lead: 'Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO',
+        content: `<section><h2>1. Allgemeine Hinweise</h2><p>Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten beim Besuch dieser Website verarbeitet werden und welche Rechte Ihnen zustehen. Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen. Die Angaben beziehen sich auf die derzeitige technische Umsetzung dieser Website.</p><p>Rechtsgrundlagen sind – soweit im jeweiligen Abschnitt genannt – insbesondere Art. 6 Abs. 1 DSGVO. Informationen nach Art. 13 DSGVO zu Verantwortlichem, Zwecken, Rechtsgrundlagen, Empfängern, Speicherdauer und Ihren Rechten finden Sie in den folgenden Abschnitten.</p></section>
+        <section><h2>2. Verantwortlicher</h2><p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p><p><strong>{{businessName}} – {{legalForm}}<br>{{ownerName}}</strong></p>{{address}}{{email}}{{telephone}}</section>
+            <section><h2>3. Hosting und Server-Log-Dateien</h2><p>Diese Website wird als statische Website über GitHub Pages bereitgestellt. Anbieter ist GitHub, Inc. GitHub weist in der Dokumentation zu GitHub Pages darauf hin, dass bei einem Seitenaufruf die IP-Adresse der Besuchenden zu Sicherheitszwecken protokolliert und gespeichert wird. Die IP-Adresse wird dabei an GitHub übermittelt. Die Bereitstellung der Website über den Hosting-Anbieter erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung). GitHub beschreibt die Verarbeitung zu eigenen Sicherheitszwecken in seiner Datenschutzerklärung.</p><p>Die veröffentlichte GitHub-Pages-Dokumentation nennt keine konkrete Speicherregion oder Aufbewahrungsfrist für diese Zugriffsprotokolle. Deshalb machen wir hierzu keine weitergehenden Angaben. GitHub beschreibt seine Datenverarbeitung in der <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub-Datenschutzerklärung</a> und stellt eine <a href="https://github.com/customer-terms/github-data-protection-agreement">Data Protection Agreement (DPA)</a> bereit. Ob und in welchem Umfang diese Vereinbarung für das vorliegende öffentliche Hosting gilt, ist vor Veröffentlichung anhand des konkreten GitHub-Kontos und der Vertragsbedingungen zu prüfen. Informationen zu möglichen internationalen Verarbeitungen finden Sie ebenfalls in den GitHub-Unterlagen; ein bestimmter Speicherort wird hier nicht zugesichert.</p><p>Weitere Informationen zur Protokollierung von IP-Adressen durch GitHub Pages enthält die <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">GitHub-Pages-Dokumentation</a>.</p></section>
+            <section><h2>4. Kontaktaufnahme per E-Mail</h2><p>{{emailAvailability}} Wenn Sie per E-Mail Kontakt aufnehmen, verarbeiten wir die von Ihnen übermittelten Angaben (insbesondere Absenderadresse, Nachrichteninhalt und gegebenenfalls Anlagen), um Ihre Anfrage zu bearbeiten und zu beantworten. Bei vorvertraglichen Anfragen ist Rechtsgrundlage Art. 6 Abs. 1 lit. b DSGVO; bei sonstigen Anfragen Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Kontaktanfragen). Die Angaben sind freiwillig; ohne die zur Bearbeitung erforderlichen Informationen kann die Anfrage gegebenenfalls nicht beantwortet werden.</p></section>
+            <section><h2>5. Kontaktformular</h2><p>Das Formular auf der Website ist derzeit ein nicht angebundener Prototyp. Die Skripte prüfen Eingaben ausschließlich im Browser; ein normaler Formularversand wird verhindert. Die in der Website-Konfiguration vorgesehene Versandadresse ist leer. Beim Absenden werden daher keine Formulardaten an YOROZU IT oder einen Formularanbieter übertragen und von dieser Website weder serverseitig empfangen noch gespeichert. Die eingegebenen Werte verbleiben lediglich vorübergehend im Browser, solange die Seite geöffnet ist. Bitte übermitteln Sie über den Prototyp keine vertraulichen Informationen.</p><p>Wird das Formular später aktiviert, müssen diese Datenschutzerklärung und die Formularhinweise vor der Aktivierung um den tatsächlichen Dienst, Empfänger, Zweck, Rechtsgrundlage und die Speicherdauer ergänzt werden.</p></section>
+            <section><h2>6. Cookies und lokale Speicherung</h2><p>Die Website setzt nach derzeitigem Stand keine Cookies und verwendet weder localStorage noch sessionStorage oder vergleichbare Technologien, um Informationen auf Ihrem Endgerät zu speichern oder auf solche Informationen zuzugreifen. Es werden daher keine optionalen Speicher- oder Zugriffsvorgänge eingesetzt, für die eine Einwilligung nach § 25 TDDDG einzuholen wäre. Der technische Browser-Cache kann unabhängig davon durch Ihren Browser verwaltet werden.</p></section>
+            <section><h2>7. Externe Dienste und Drittanbieter</h2><p>Abgesehen vom Hosting über GitHub Pages sind derzeit keine Analyse-, Werbe-, Karten-, Video-, Social-Media- oder externen Schrift-Dienste eingebunden. Insbesondere werden keine externen Google Fonts geladen. Beim bloßen Aufruf werden daher keine Daten an solche Dienste übermittelt. Die in dieser Erklärung gesetzten Links zu Anbieterinformationen werden erst aufgerufen, wenn Sie sie anklicken.</p></section>
+            <section><h2>8. SSL-/TLS-Verschlüsselung</h2><p>Die Website ist über HTTPS erreichbar. Eine verschlüsselte Verbindung erkennen Sie an „https://“ in der Adresszeile Ihres Browsers. Die Verschlüsselung schützt die Übertragung zwischen Ihrem Browser und dem Webangebot; sie ist keine Ende-zu-Ende-Verschlüsselung und sagt nichts über die Speicherdauer beim Hosting-Anbieter aus.</p></section>
+            <section><h2>9. Weitergabe personenbezogener Daten</h2><p>Eine Weitergabe erfolgt nur, soweit sie für die Bereitstellung dieser Website durch GitHub Pages erforderlich ist, Sie ausdrücklich eingewilligt haben, eine gesetzliche Verpflichtung besteht oder dies zur Geltendmachung beziehungsweise Abwehr von Rechtsansprüchen erforderlich ist. Das nicht angebundene Kontaktformular übermittelt keine Eingaben. Eine darüber hinausgehende Weitergabe zu Werbe- oder Analysezwecken findet nach der derzeitigen technischen Umsetzung nicht statt.</p></section>
+            <section><h2>10. Speicherdauer</h2><p>Das Kontaktformular speichert keine Formulardaten. Die Dauer der Speicherung von GitHub-Pages-Zugriffsprotokollen wird in der verfügbaren GitHub-Pages-Dokumentation nicht konkret angegeben; wir können deshalb keine Frist nennen. E-Mail-Anfragen werden gelöscht, sobald sie für die Bearbeitung nicht mehr erforderlich sind, soweit keine gesetzlichen Aufbewahrungspflichten oder berechtigten Gründe für eine weitere Speicherung entgegenstehen.</p></section>
+            <section><h2>11. Rechte der betroffenen Personen</h2><p>Sie haben im Rahmen der gesetzlichen Voraussetzungen folgende Rechte:</p><ul><li>Auskunft über die verarbeiteten personenbezogenen Daten (Art. 15 DSGVO),</li><li>Berichtigung unrichtiger Daten (Art. 16 DSGVO),</li><li>Löschung (Art. 17 DSGVO),</li><li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li><li>Information über Empfänger bei Berichtigung, Löschung oder Einschränkung (Art. 19 DSGVO),</li><li>Datenübertragbarkeit (Art. 20 DSGVO), soweit die gesetzlichen Voraussetzungen erfüllt sind,</li><li>Widerspruch gegen eine Verarbeitung auf Grundlage berechtigter Interessen (Art. 21 DSGVO),</li><li>Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li></ul><p>Zur Ausübung Ihrer Rechte können Sie sich an den Verantwortlichen wenden. Sie haben außerdem das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Eine automatisierte Entscheidungsfindung einschließlich Profiling findet nicht statt.</p></section>
+            <section><h2>12. Beschwerderecht bei einer Datenschutzaufsichtsbehörde</h2><p>Unbeschadet eines anderweitigen Rechtsbehelfs können Sie sich bei einer Datenschutzaufsichtsbehörde beschweren, insbesondere in dem Mitgliedstaat Ihres gewöhnlichen Aufenthalts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes (Art. 77 DSGVO). Für Nordrhein-Westfalen ist die <a href="https://www.ldi.nrw.de/">Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen</a> zuständig.</p></section>
+            <section><h2>13. Aktualität dieser Datenschutzerklärung</h2><p>Diese Datenschutzerklärung entspricht dem technischen Stand der Website zum angegebenen Datum. Bei Änderungen der Website, insbesondere bei Aktivierung des Kontaktformulars oder Einbindung weiterer Dienste, wird sie angepasst.</p><p class="legal-updated">Stand: {{currentDate}}</p></section>`
+    }
+];
+
+for (const page of legalPages) {
+    const outputDirectory = path.join(dist, page.slug);
+    fs.mkdirSync(outputDirectory, { recursive: true });
+    const html = renderLegalPage(legalTemplate, page);
+    const output = path.join(outputDirectory, 'index.html');
     fs.writeFileSync(output, html);
     console.log(`Built ${path.relative(root, output)}`);
 }
@@ -221,7 +387,11 @@ if (fs.existsSync(heroBackgroundImage)) fs.copyFileSync(heroBackgroundImage, pat
 const projectImages = path.join(root, 'src/images/projects');
 if (fs.existsSync(projectImages)) fs.cpSync(projectImages, path.join(dist, 'images/projects'), { recursive: true });
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${languages.map((lang) => `  <url><loc>${absoluteUrl(lang === 'ja' ? '/' : `/${lang}/`)}</loc></url>`).join('\n')}\n</urlset>\n`;
+const sitemapRoutes = [
+    ...languages.map((lang) => lang === 'ja' ? '/' : `/${lang}/`),
+    ...(legalInformationComplete ? ['/impressum/', '/datenschutz/'] : [])
+];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapRoutes.map((route) => `  <url><loc>${absoluteUrl(route)}</loc></url>`).join('\n')}\n</urlset>\n`;
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${absoluteUrl('/sitemap.xml')}\n`);
 console.log('Built sitemap.xml and robots.txt');

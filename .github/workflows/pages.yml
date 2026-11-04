@@ -33,6 +33,7 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
+          NODE_ENV: production
           SITE_URL: https://${{ github.repository_owner }}.github.io
           BASE_PATH: /${{ github.event.repository.name }}/
       - name: Upload Pages artifact

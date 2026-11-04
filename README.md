@@ -27,27 +27,35 @@ The generated site is in `dist/`, so publishing the repository root displays Git
 
 The workflow builds links with the `/yorozuit/` project path, so assets and language switching work on GitHub Pages.
 
+## Legal pages
+
+The static build creates `/impressum/` and `/datenschutz/` as `index.html` routes, which work with GitHub Pages and direct refreshes. Both pages use German legal content regardless of the homepage language. All editable business details are centralized in `src/config/businessInfo.ts`; the page layout and legal text do not need manual edits when those values change. The Steuernummer is kept separate and is never rendered. The USt-IdNr. is rendered only when supplied.
+
+During local development, missing required values trigger a console warning and visible placeholders. A production build (`NODE_ENV=production`) fails until required business information is complete; the GitHub Pages workflow sets this mode to prevent publishing draft legal pages. The telephone number and responsible person are optional unless applicable; if responsible-person information is started, both name and address are required. Review the hosting and data-protection arrangement for the GitHub account before publication; the pages link to GitHub's published Pages and privacy documentation.
+
 ## Google Sheets connection
 
-The form sends JSON to a Google Apps Script web app. The spreadsheet ID stays in Apps Script and is not included in the public site.
+The form is currently a non-connected prototype. The spreadsheet ID stays in Apps Script and is not included in the public site.
 
 1. Create or choose a spreadsheet owned by your Google account and copy its ID from the spreadsheet URL.
 2. Open Google Apps Script, create a project, and paste in `apps-script/Code.gs`.
 3. In Apps Script project settings, add a script property named `SPREADSHEET_ID` with your spreadsheet ID as its value.
 4. Deploy the project as a web app, executing as your account and allowing access to anyone. Copy the deployed URL ending in `/exec`.
-5. Set that URL as `googleSheetsWebAppUrl` in `src/js/config.js`, then run `npm run build` and redeploy the generated `dist/` files.
+5. Before enabling the endpoint, update and verify the privacy notice and form consent copy to describe the actual recipient, purposes, legal basis, and retention. Then set the URL as `googleSheetsWebAppUrl` in `src/js/config.js`, run `npm run build`, and redeploy the generated `dist/` files. The build intentionally stops if an endpoint is configured while the notice still describes the disconnected prototype.
 
 The script creates a `Contact requests` tab and adds a header row when needed. The public web app URL can be called by anyone, so the endpoint uses server-side field validation and a honeypot, but these are not strong abuse protection. The browser uses a no-CORS request, so the page can report that it sent a request but cannot confirm that a row was written; check the spreadsheet if confirmation is needed. Do not collect real personal data until the privacy notice and consent text are finalized. Add stronger spam controls before production.
 
 ## Project files
 
 - `src/templates/index.template.html`: shared semantic HTML template
+- `src/templates/legal.template.html`: shared German legal-page shell
+- `src/config/businessInfo.ts`: centralized business and publication-readiness information
 - `src/translations/`: localized content and form choices
 - `src/css/style.css`: responsive styles
 - `src/js/main.js`: mobile navigation and prototype form validation
 - `src/js/config.js`: public Google Apps Script web app URL setting
 - `apps-script/Code.gs`: Google Sheets receiver to deploy in your Apps Script project
-- `scripts/build.js`: static page, sitemap and robots.txt generator
+- `scripts/build.js`: static page, legal-page, sitemap and robots.txt generator
 - `.github/workflows/pages.yml`: GitHub Pages build and deployment
 - `dist/`: generated site output
 
@@ -74,4 +82,4 @@ Add a project to the `items` array using localized copy. Project images should b
 
 Reviews use the requested `review_id`, `customer_comment`, `service_category`, `display_name`, `review_date`, `language`, optional real `rating`, and `publication_permission` fields. Only entries with `publication_permission: true` are shown. Leave `display_name` empty for the localized anonymous label; the comment remains in its original language. Ratings are shown only when an integer from 1 to 5 is provided. No review or rating structured data is generated. Run `npm run build` after editing content data.
 
-Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Replace the clearly marked pricing and legal placeholders and add verified business contact details before production.
+Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Before production, add verified business contact details in `scripts/build.js`, review the legal content for the actual business and hosting arrangement, and replace the clearly marked pricing placeholder. The legal pages must not be treated as publication-ready while their draft warning is shown.
