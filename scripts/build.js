@@ -131,7 +131,7 @@ function renderHeroArtwork(translations) {
         return `<figure class="hero-portrait"><img class="hero-photo" src="${publicPath('/images/profile.jpg')}" alt="${escapeHtml(translations.hero.profileAlt)}">${profileNote}</figure>`;
     }
 
-    return `<div class="hero-fallback" role="img" aria-label="${escapeHtml(translations.hero.visualAlt)}"><div class="visual-orbit orbit-one"></div><div class="visual-orbit orbit-two"></div><div class="visual-window"><div class="window-top"><i></i><i></i><i></i><span>yorozu / support</span></div><div class="window-content"><div class="window-sidebar"><b></b><i></i><i></i><i></i></div><div class="window-main"><div class="screen-label">IT HELP, MADE HUMAN</div><div class="screen-line line-wide"></div><div class="screen-line line-mid"></div><div class="screen-card"><span class="screen-icon">Wi-Fi</span><span><b>Home connection</b><small>Connected and ready</small></span><strong>✓</strong></div><div class="screen-bottom"><span></span><span></span><span></span><span></span></div></div></div></div>${profileNote}<div class="hero-stamp"><span>DE</span><span class="stamp-dot"></span><span>JP</span></div></div>`;
+    return '';
 }
 
 function renderPage(lang, translations, template, siteData) {
@@ -150,6 +150,10 @@ function renderPage(lang, translations, template, siteData) {
         homeUrl: publicPath(route),
         logoUrl,
         logoMimeType,
+        heroProfileClass: fs.existsSync(path.join(root, 'src/images/profile.jpg')) ? 'hero-has-profile' : '',
+        heroBackground: fs.existsSync(path.join(root, 'src/images/helo_background_image.jpeg'))
+            ? `url(${publicPath('/images/helo_background_image.jpeg')})`
+            : 'none',
         year: new Date().getFullYear(),
         jaActive: lang === 'ja' ? 'is-active' : '',
         deActive: lang === 'de' ? 'is-active' : '',
@@ -204,6 +208,8 @@ for (const asset of ['style.css', 'config.js', 'main.js', 'logo.svg']) {
 if (fs.existsSync(pngLogo)) fs.copyFileSync(pngLogo, path.join(dist, 'assets', logoAsset));
 const profileImage = path.join(root, 'src/images/profile.jpg');
 if (fs.existsSync(profileImage)) fs.copyFileSync(profileImage, path.join(dist, 'images/profile.jpg'));
+const heroBackgroundImage = path.join(root, 'src/images/helo_background_image.jpeg');
+if (fs.existsSync(heroBackgroundImage)) fs.copyFileSync(heroBackgroundImage, path.join(dist, 'images/helo_background_image.jpeg'));
 const projectImages = path.join(root, 'src/images/projects');
 if (fs.existsSync(projectImages)) fs.cpSync(projectImages, path.join(dist, 'images/projects'), { recursive: true });
 
