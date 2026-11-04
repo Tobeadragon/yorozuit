@@ -54,13 +54,18 @@
             <div class="container hero-grid">
                 <div class="hero-copy">
                     <p class="eyebrow"><span class="eyebrow-dot"></span>{{hero.eyebrow}}</p>
-                    <h1>{{hero.title}}</h1>
+                    <h1>{{heroTitle}}</h1>
                     <p class="hero-lead">{{hero.lead}}</p>
+                    <p class="hero-supporting">{{hero.supporting}}</p>
                     <div class="hero-actions">
-                        <a class="button button-primary" href="#contact">{{ui.ctaContact}} <span
-                                aria-hidden="true">↗</span></a>
-                        <a class="button button-text" href="#services">{{ui.ctaServices}} <span
-                                aria-hidden="true">↓</span></a>
+                        <a class="button button-primary" href="#contact"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                aria-hidden="true">
+                                <rect x="3" y="5" width="18" height="14" rx="2" />
+                                <path d="m3 7 9 6 9-6" />
+                            </svg>{{ui.navContact}}<span aria-hidden="true">→</span></a>
+                        <a class="button button-text" href="#services">{{ui.ctaServices}}<span
+                                aria-hidden="true">→</span></a>
                     </div>
                     <p class="hero-note"><span aria-hidden="true">◎</span> {{hero.note}}</p>
                 </div>

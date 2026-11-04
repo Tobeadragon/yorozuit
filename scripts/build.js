@@ -68,6 +68,13 @@ function renderOptions(items) {
     return items.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
 }
 
+function renderHeroTitle(title) {
+    return String(title).split('\n').map((line, index) => {
+        const accentClass = index === 1 ? ' hero-title-accent' : '';
+        return `<span class="hero-title-line${accentClass}">${escapeHtml(line)}</span>`;
+    }).join('');
+}
+
 function localizedText(value, lang) {
     if (typeof value === 'string') return value;
     return value?.[lang] || value?.en || value?.ja || '';
@@ -159,6 +166,7 @@ function renderPage(lang, translations, template, siteData) {
         deActive: lang === 'de' ? 'is-active' : '',
         enActive: lang === 'en' ? 'is-active' : '',
         heroArtwork: renderHeroArtwork(translations),
+        heroTitle: renderHeroTitle(translations.hero.title),
         ownerProfile: renderOwnerProfile(translations.ownerProfile),
         benefits: renderBenefits(translations.benefits),
         serviceCards: renderServices(translations.serviceCards, translations.ui.navContact),
