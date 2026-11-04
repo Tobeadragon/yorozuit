@@ -98,6 +98,21 @@ function renderSteps(items) {
     return items.map((item, index) => `<div class="step"><span class="step-number">0${index + 1}</span><p>${escapeHtml(item)}</p></div>`).join('');
 }
 
+function renderPricingItems(items, labels) {
+    if (!Array.isArray(items) || items.length === 0) {
+        throw new Error('pricing.items must contain at least one price entry');
+    }
+
+    return `<div class="pricing-table-wrap"><table class="pricing-table" aria-labelledby="pricing-title"><thead><tr><th scope="col">${escapeHtml(labels.itemLabel)}</th><th scope="col">${escapeHtml(labels.priceLabel)}</th><th scope="col">${escapeHtml(labels.detailsLabel)}</th></tr></thead><tbody>${items.map((item, index) => {
+        for (const field of ['name', 'amount', 'description']) {
+            if (typeof item[field] !== 'string' || !item[field].trim()) {
+                throw new Error(`pricing.items[${index}].${field} must be a non-empty string`);
+            }
+        }
+        return `<tr><th scope="row" data-label="${escapeHtml(labels.itemLabel)}">${escapeHtml(item.name)}</th><td data-label="${escapeHtml(labels.priceLabel)}">${escapeHtml(item.amount)}</td><td data-label="${escapeHtml(labels.detailsLabel)}">${escapeHtml(item.description)}</td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+
 function renderFaq(items) {
     return items.map((item) => `<details class="faq-item"><summary>${escapeHtml(item.q)}<span aria-hidden="true"></span></summary><p>${escapeHtml(item.a)}</p></details>`).join('');
 }
@@ -316,6 +331,7 @@ function renderPage(lang, translations, template, siteData) {
         projectContent: renderProjects(siteData.projects, lang, translations.projectsSection, translations),
         reviewContent: renderReviews(siteData.reviews, lang, translations.reviewsSection, translations),
         steps: renderSteps(translations.process.steps),
+        pricingItems: renderPricingItems(translations.pricing.items, translations.pricing),
         faqs: renderFaq(translations.faq.items),
         areaList: translations.area.places.map((place) => `<span>${escapeHtml(place)}</span>`).join(''),
         languageOptions: renderOptions(translations.form.languageOptions),

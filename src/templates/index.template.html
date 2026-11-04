@@ -150,13 +150,13 @@
             <div class="container pricing-inner">
                 <div>
                     <p class="eyebrow">{{pricing.eyebrow}}</p>
-                    <h2>{{pricing.title}}</h2>
+                    <h2 id="pricing-title">{{pricing.title}}</h2>
                     <p>{{pricing.body}}</p>
                 </div>
                 <div class="price-panel">
-                    <span>{{pricing.label}}</span><strong>{{pricing.amount}}</strong><small>{{pricing.note}}</small><a
-                        class="button button-light" href="#contact">{{pricing.cta}} <span
-                            aria-hidden="true">↗</span></a>
+                    {{pricingItems}}
+                    <a class="button button-light" href="#contact">{{pricing.cta}} <span
+                        aria-hidden="true">↗</span></a>
                 </div>
             </div>
         </section>

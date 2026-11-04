@@ -103,4 +103,8 @@ The snippets above are field templates only; replace every example value with ve
 
 `src/data/case-studies.json` contains illustrative enquiries, not real project or customer references. Its existing disclaimer must remain. `src/translations/{ja,de,en}.json` contains the section headings and empty-state copy.
 
-Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Before production, review the legal content for the actual business and hosting arrangement, and replace the clearly marked pricing placeholder. The legal pages must not be treated as publication-ready while their draft warning is shown.
+## Add multiple prices
+
+The pricing section is a responsive table. Add one object for each price under the `pricing.items` array in each language file: `src/translations/ja.json`, `src/translations/de.json`, and `src/translations/en.json`. Each row has a `name`, `amount`, and `description`; use the correct translation and verified price in every language. Duplicate the existing row to add another one. The build checks that each row has all three non-empty fields. After editing, run `npm run build`, then commit and push to publish.
+
+Add the owner's approved portrait at `src/images/profile.jpg` to include it in the build. Until then, the hero uses a non-personal illustration. Before production, review the legal content for the actual business and hosting arrangement. The legal pages must not be treated as publication-ready while their draft warning is shown.
