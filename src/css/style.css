@@ -1925,7 +1925,7 @@ h1 {
 
     .hero {
         padding-top: 45px;
-        background-image: linear-gradient(180deg, rgb(246 249 248 / 94%) 0%, rgb(246 249 248 / 84%) 36%, rgb(246 249 248 / 68%) 100%), var(--hero-image, none);
+        background-image: linear-gradient(180deg, rgb(246 249 248 / 92%) 0%, rgb(246 249 248 / 76%) 35%, rgb(246 249 248 / 52%) 68%, rgb(246 249 248 / 30%) 100%), var(--hero-image, none);
         background-position: 62% center;
     }
 
