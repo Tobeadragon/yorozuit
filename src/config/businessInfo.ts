@@ -26,7 +26,7 @@ export const businessInfo = {
   website: "https://tobeadragon.github.io/yorozuit/",
 
   responsiblePerson: {
-    name: "",
+    name: "Tatsuya Yamashita",
     address: "Heresbachstraße 8, 40223 Düsseldorf, Deutschland",
   },
 };
