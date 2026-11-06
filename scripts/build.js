@@ -42,9 +42,6 @@ if (!legalInformationComplete) {
 const configSource = fs.readFileSync(path.join(root, 'src/js/config.js'), 'utf8');
 const formEndpoint = configSource.match(/googleSheetsWebAppUrl:\s*(['"])(.*?)\1/);
 if (!formEndpoint) throw new Error('Could not verify the contact form endpoint in src/js/config.js');
-if (formEndpoint[2].trim()) {
-    throw new Error('The contact form endpoint is configured. Update and verify the privacy notice before building.');
-}
 
 function publicPath(route) {
     const relativePath = route.replace(/^\/+/, '');
@@ -473,15 +470,236 @@ const legalPages = [
         <section><h2>2. Verantwortlicher</h2><p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p><p><strong>{{businessName}} – {{legalForm}}<br>{{ownerName}}</strong></p>{{address}}{{email}}{{telephone}}</section>
             <section><h2>3. Hosting und Server-Log-Dateien</h2><p>Diese Website wird als statische Website über GitHub Pages bereitgestellt. Anbieter ist GitHub, Inc. GitHub weist in der Dokumentation zu GitHub Pages darauf hin, dass bei einem Seitenaufruf die IP-Adresse der Besuchenden zu Sicherheitszwecken protokolliert und gespeichert wird. Die IP-Adresse wird dabei an GitHub übermittelt. Die Bereitstellung der Website über den Hosting-Anbieter erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung). GitHub beschreibt die Verarbeitung zu eigenen Sicherheitszwecken in seiner Datenschutzerklärung.</p><p>Die veröffentlichte GitHub-Pages-Dokumentation nennt keine konkrete Speicherregion oder Aufbewahrungsfrist für diese Zugriffsprotokolle. Deshalb machen wir hierzu keine weitergehenden Angaben. GitHub beschreibt seine Datenverarbeitung in der <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub-Datenschutzerklärung</a> und stellt eine <a href="https://github.com/customer-terms/github-data-protection-agreement">Data Protection Agreement (DPA)</a> bereit. Ob und in welchem Umfang diese Vereinbarung für das vorliegende öffentliche Hosting gilt, ist vor Veröffentlichung anhand des konkreten GitHub-Kontos und der Vertragsbedingungen zu prüfen. Informationen zu möglichen internationalen Verarbeitungen finden Sie ebenfalls in den GitHub-Unterlagen; ein bestimmter Speicherort wird hier nicht zugesichert.</p><p>Weitere Informationen zur Protokollierung von IP-Adressen durch GitHub Pages enthält die <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages">GitHub-Pages-Dokumentation</a>.</p></section>
             <section><h2>4. Kontaktaufnahme per E-Mail</h2><p>{{emailAvailability}} Wenn Sie per E-Mail Kontakt aufnehmen, verarbeiten wir die von Ihnen übermittelten Angaben (insbesondere Absenderadresse, Nachrichteninhalt und gegebenenfalls Anlagen), um Ihre Anfrage zu bearbeiten und zu beantworten. Bei vorvertraglichen Anfragen ist Rechtsgrundlage Art. 6 Abs. 1 lit. b DSGVO; bei sonstigen Anfragen Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Kontaktanfragen). Die Angaben sind freiwillig; ohne die zur Bearbeitung erforderlichen Informationen kann die Anfrage gegebenenfalls nicht beantwortet werden.</p></section>
-            <section><h2>5. Kontaktformular</h2><p>Das Formular auf der Website ist derzeit ein nicht angebundener Prototyp. Die Skripte prüfen Eingaben ausschließlich im Browser; ein normaler Formularversand wird verhindert. Die in der Website-Konfiguration vorgesehene Versandadresse ist leer. Beim Absenden werden daher keine Formulardaten an YOROZU IT oder einen Formularanbieter übertragen und von dieser Website weder serverseitig empfangen noch gespeichert. Die eingegebenen Werte verbleiben lediglich vorübergehend im Browser, solange die Seite geöffnet ist. Bitte übermitteln Sie über den Prototyp keine vertraulichen Informationen.</p><p>Wird das Formular später aktiviert, müssen diese Datenschutzerklärung und die Formularhinweise vor der Aktivierung um den tatsächlichen Dienst, Empfänger, Zweck, Rechtsgrundlage und die Speicherdauer ergänzt werden.</p></section>
+            <section><h2>5. Kontaktformular</h2>
+
+<p>
+
+Über das Kontaktformular können Sie mit YOROZU IT Kontakt aufnehmen.
+
+Dabei werden folgende personenbezogene Daten erhoben:
+
+Ihr Name, Ihre E-Mail-Adresse, Ihre Nachricht sowie optional Ihre Telefonnummer.
+
+Die Angabe der Telefonnummer ist freiwillig.
+
+</p>
+
+<p>
+
+Die Übermittlung der Formulardaten erfolgt über Google Apps Script.
+
+Die eingegebenen Daten werden verarbeitet und in einer Google-Tabelle
+
+(Google Sheets) gespeichert. Zusätzlich werden E-Mail-Benachrichtigungen
+
+über den Google-Dienst MailApp versendet.
+
+Dabei erhält YOROZU IT eine Benachrichtigung über die Anfrage.
+
+An die von Ihnen angegebene E-Mail-Adresse wird außerdem eine
+
+Eingangsbestätigung gesendet.
+
+</p>
+
+<p>
+
+Die Verarbeitung erfolgt zum Zweck der Bearbeitung Ihrer Anfrage,
+
+der Kommunikation mit Ihnen und gegebenenfalls der Vorbereitung
+
+vertraglicher Leistungen.
+
+Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage
+
+auf den Abschluss eines Vertrags gerichtet ist.
+
+Bei sonstigen Anfragen erfolgt die Verarbeitung auf Grundlage
+
+von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der
+
+Bearbeitung und Beantwortung von Kontaktanfragen).
+
+</p>
+
+<p>
+
+Die Speicherung der Anfragedaten erfolgt in Google Sheets.
+
+Die Daten sollen grundsätzlich spätestens zwölf Monate nach
+
+Abschluss der Bearbeitung gelöscht werden, sofern keine
+
+gesetzlichen Aufbewahrungspflichten oder andere berechtigte
+
+Gründe für eine längere Speicherung bestehen.
+
+</p>
+
+<p>
+
+Bitte übermitteln Sie über das Kontaktformular keine besonders
+
+sensiblen personenbezogenen Daten.
+
+</p></section>
             <section><h2>6. Cookies und lokale Speicherung</h2><p>Die Website setzt nach derzeitigem Stand keine Cookies und verwendet weder localStorage noch sessionStorage oder vergleichbare Technologien, um Informationen auf Ihrem Endgerät zu speichern oder auf solche Informationen zuzugreifen. Es werden daher keine optionalen Speicher- oder Zugriffsvorgänge eingesetzt, für die eine Einwilligung nach § 25 TDDDG einzuholen wäre. Der technische Browser-Cache kann unabhängig davon durch Ihren Browser verwaltet werden.</p></section>
-            <section><h2>7. Externe Dienste und Drittanbieter</h2><p>Abgesehen vom Hosting über GitHub Pages sind derzeit keine Analyse-, Werbe-, Karten-, Video-, Social-Media- oder externen Schrift-Dienste eingebunden. Insbesondere werden keine externen Google Fonts geladen. Beim bloßen Aufruf werden daher keine Daten an solche Dienste übermittelt. Die in dieser Erklärung gesetzten Links zu Anbieterinformationen werden erst aufgerufen, wenn Sie sie anklicken.</p></section>
+            <section><h2>7. Externe Dienste und Drittanbieter</h2>
+            <p>
+    Für die Verarbeitung von Kontaktanfragen nutzen wir Google Apps Script,
+    Google Sheets und den Dienst MailApp von Google.
+    Diese Dienste werden verwendet, um die über das Kontaktformular
+    übermittelten Daten zu verarbeiten, zu speichern und E-Mail-Nachrichten
+    zu versenden.
+</p>
+
+<p>
+    Anbieter der verwendeten Dienste ist Google LLC sowie gegebenenfalls
+    eine verbundene Google-Gesellschaft, abhängig von den jeweils geltenden
+    Nutzungs- und Datenschutzbedingungen.
+    Eine Verarbeitung personenbezogener Daten außerhalb des Europäischen
+    Wirtschaftsraums kann nicht ausgeschlossen werden.
+</p>
+
+<p>
+    Weitere Informationen zur Datenverarbeitung durch Google finden Sie
+    in der
+    <a href="https://policies.google.com/privacy?hl=de">
+        Google-Datenschutzerklärung
+    </a>.
+</p>
+
+<p>
+    Darüber hinaus werden derzeit keine Analyse-, Werbe-, Karten-,
+    Video-, Social-Media- oder externen Schrift-Dienste eingebunden.
+    Insbesondere werden keine externen Google Fonts geladen.
+</p>
+</section>
+
+            
             <section><h2>8. SSL-/TLS-Verschlüsselung</h2><p>Die Website ist über HTTPS erreichbar. Eine verschlüsselte Verbindung erkennen Sie an „https://“ in der Adresszeile Ihres Browsers. Die Verschlüsselung schützt die Übertragung zwischen Ihrem Browser und dem Webangebot; sie ist keine Ende-zu-Ende-Verschlüsselung und sagt nichts über die Speicherdauer beim Hosting-Anbieter aus.</p></section>
-            <section><h2>9. Weitergabe personenbezogener Daten</h2><p>Eine Weitergabe erfolgt nur, soweit sie für die Bereitstellung dieser Website durch GitHub Pages erforderlich ist, Sie ausdrücklich eingewilligt haben, eine gesetzliche Verpflichtung besteht oder dies zur Geltendmachung beziehungsweise Abwehr von Rechtsansprüchen erforderlich ist. Das nicht angebundene Kontaktformular übermittelt keine Eingaben. Eine darüber hinausgehende Weitergabe zu Werbe- oder Analysezwecken findet nach der derzeitigen technischen Umsetzung nicht statt.</p></section>
-            <section><h2>10. Speicherdauer</h2><p>Das Kontaktformular speichert keine Formulardaten. Die Dauer der Speicherung von GitHub-Pages-Zugriffsprotokollen wird in der verfügbaren GitHub-Pages-Dokumentation nicht konkret angegeben; wir können deshalb keine Frist nennen. E-Mail-Anfragen werden gelöscht, sobald sie für die Bearbeitung nicht mehr erforderlich sind, soweit keine gesetzlichen Aufbewahrungspflichten oder berechtigten Gründe für eine weitere Speicherung entgegenstehen.</p></section>
-            <section><h2>11. Rechte der betroffenen Personen</h2><p>Sie haben im Rahmen der gesetzlichen Voraussetzungen folgende Rechte:</p><ul><li>Auskunft über die verarbeiteten personenbezogenen Daten (Art. 15 DSGVO),</li><li>Berichtigung unrichtiger Daten (Art. 16 DSGVO),</li><li>Löschung (Art. 17 DSGVO),</li><li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li><li>Information über Empfänger bei Berichtigung, Löschung oder Einschränkung (Art. 19 DSGVO),</li><li>Datenübertragbarkeit (Art. 20 DSGVO), soweit die gesetzlichen Voraussetzungen erfüllt sind,</li><li>Widerspruch gegen eine Verarbeitung auf Grundlage berechtigter Interessen (Art. 21 DSGVO),</li><li>Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li></ul><p>Zur Ausübung Ihrer Rechte können Sie sich an den Verantwortlichen wenden. Sie haben außerdem das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Eine automatisierte Entscheidungsfindung einschließlich Profiling findet nicht statt.</p></section>
-            <section><h2>12. Beschwerderecht bei einer Datenschutzaufsichtsbehörde</h2><p>Unbeschadet eines anderweitigen Rechtsbehelfs können Sie sich bei einer Datenschutzaufsichtsbehörde beschweren, insbesondere in dem Mitgliedstaat Ihres gewöhnlichen Aufenthalts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes (Art. 77 DSGVO). Für Nordrhein-Westfalen ist die <a href="https://www.ldi.nrw.de/">Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen</a> zuständig.</p></section>
-            <section><h2>13. Aktualität dieser Datenschutzerklärung</h2><p>Diese Datenschutzerklärung entspricht dem technischen Stand der Website zum angegebenen Datum. Bei Änderungen der Website, insbesondere bei Aktivierung des Kontaktformulars oder Einbindung weiterer Dienste, wird sie angepasst.</p><p class="legal-updated">Stand: {{currentDate}}</p></section>`
+            <section>
+    <h2>9. Weitergabe personenbezogener Daten</h2>
+<p>
+    Eine Weitergabe personenbezogener Daten erfolgt nur, soweit dies
+    für die Bereitstellung dieser Website und die Bearbeitung Ihrer
+    Anfragen erforderlich ist, Sie ausdrücklich eingewilligt haben,
+    eine gesetzliche Verpflichtung besteht oder dies zur Geltendmachung
+    beziehungsweise Abwehr von Rechtsansprüchen erforderlich ist.
+</p>
+
+<p>
+    Im Rahmen der Nutzung des Kontaktformulars werden die von Ihnen
+    eingegebenen Daten über Google Apps Script verarbeitet und
+    in Google Sheets gespeichert. Außerdem wird
+    Google MailApp zum Versand von E-Mail-Benachrichtigungen verwendet.
+    Hierbei können personenbezogene Daten an Google LLC übermittelt
+    werden.
+</p>
+
+<p>
+    Eine darüber hinausgehende Weitergabe personenbezogener Daten
+    zu Werbe- oder Analysezwecken findet nach der derzeitigen
+    technischen Umsetzung nicht statt.
+</p></section>
+            <section><h2>10. Speicherdauer</h2><p>
+    Die über das Kontaktformular übermittelten personenbezogenen
+    Daten werden über Google Apps Script verarbeitet und in
+    Google Sheets gespeichert, soweit dies für die Bearbeitung
+    Ihrer Anfrage erforderlich ist.
+</p>
+
+<p>
+    Die gespeicherten Kontaktanfragen werden grundsätzlich
+    spätestens zwölf Monate nach Abschluss der Bearbeitung
+    gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten
+    oder andere berechtigte Gründe für eine längere Speicherung
+    bestehen.
+</p>
+
+<p>
+    E-Mail-Anfragen werden gelöscht, sobald sie für die Bearbeitung
+    nicht mehr erforderlich sind, soweit keine gesetzlichen
+    Aufbewahrungspflichten oder berechtigten Gründe für eine
+    weitere Speicherung entgegenstehen.
+</p>
+
+<p>
+    Die Dauer der Speicherung von GitHub-Pages-Zugriffsprotokollen
+    wird in der verfügbaren Dokumentation von GitHub nicht
+    konkret angegeben. Daher können wir hierzu keine verbindliche
+    Speicherfrist nennen.
+</p></section>
+            <section><h2>11. Rechte der betroffenen Personen</h2><p>
+    Sie haben im Rahmen der gesetzlichen Voraussetzungen folgende Rechte:
+</p>
+
+<ul>
+    <li>Auskunft über die verarbeiteten personenbezogenen Daten (Art. 15 DSGVO),</li>
+    <li>Berichtigung unrichtiger oder unvollständiger Daten (Art. 16 DSGVO),</li>
+    <li>Löschung Ihrer personenbezogenen Daten (Art. 17 DSGVO),</li>
+    <li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+    <li>Mitteilung über Empfänger bei Berichtigung, Löschung oder Einschränkung der Verarbeitung (Art. 19 DSGVO),</li>
+    <li>Datenübertragbarkeit (Art. 20 DSGVO), soweit die gesetzlichen Voraussetzungen erfüllt sind,</li>
+    <li>Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten (Art. 21 DSGVO), soweit die gesetzlichen Voraussetzungen erfüllt sind,</li>
+    <li>Widerruf einer erteilten Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO).</li>
+</ul>
+
+<p>
+    Zur Ausübung Ihrer Rechte können Sie sich jederzeit an den
+    Verantwortlichen wenden. Die Kontaktdaten finden Sie im Impressum.
+</p>
+
+<p>
+    Darüber hinaus haben Sie das Recht, sich bei einer zuständigen
+    Datenschutzaufsichtsbehörde über die Verarbeitung Ihrer
+    personenbezogenen Daten zu beschweren.
+</p>
+
+<p>
+    Eine automatisierte Entscheidungsfindung einschließlich
+    Profiling im Sinne von Art. 22 DSGVO findet nicht statt.
+</p></section>
+            <section><h2>12. Beschwerderecht bei einer Datenschutzaufsichtsbehörde</h2>
+
+    <p>
+
+        Unbeschadet eines anderweitigen Rechtsbehelfs können Sie sich
+
+        bei einer Datenschutzaufsichtsbehörde beschweren, insbesondere
+
+        in dem Mitgliedstaat Ihres gewöhnlichen Aufenthalts, Ihres
+
+        Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes
+
+        (Art. 77 DSGVO). Für Nordrhein-Westfalen ist die
+
+        <a href="https://www.ldi.nrw.de/" target="_blank" rel="noopener noreferrer">
+
+            Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen
+
+        </a>
+
+        zuständig.
+
+    </p></section>
+            <section><h2>13. Aktualität dieser Datenschutzerklärung</h2>
+
+    <p>
+
+        Diese Datenschutzerklärung entspricht dem technischen und
+
+        organisatorischen Stand der Website zum angegebenen Datum.
+
+        Bei Änderungen der Website, der eingesetzten Dienste oder
+
+        der Datenverarbeitungsprozesse wird diese Datenschutzerklärung
+
+        entsprechend aktualisiert.
+
+    </p>
+
+    <p class="legal-updated">Stand: {{currentDate}}</p></section>`
     }
 ];
 
