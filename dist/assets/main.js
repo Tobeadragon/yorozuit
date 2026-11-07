@@ -48,7 +48,7 @@ if (form) {
             short: 'もう少し詳しく入力してください。', consent: '送信には同意が必要です。',
             notConfigured: '送信設定がまだ完了していません。内容は送信されていません。',
             sending: '送信しています…',
-            requestSent: 'お問い合わせありがとうございます。お問い合わせを受け付けました。受領確認メールをお送りしておりますので、ご確認ください。内容を確認のうえ、折り返しご連絡いたします。',
+            requestSent: 'お問い合わせありがとうございます。お問い合わせを受け付けました。受領確認メールをお送りしておりますので、ご確認ください。内容を確認のうえ、折り返しご連絡いたします。迷惑メールフォルダに振り分けられる場合がありますので、メールが届かない場合はご確認ください。',
             networkError: '送信中にエラーが発生しました。時間をおいて再度お試しください。'
         },
         de: {
@@ -56,7 +56,7 @@ if (form) {
             short: 'Bitte geben Sie etwas mehr Details an.', consent: 'Bitte stimmen Sie der Verarbeitung zu.',
             notConfigured: 'Der Versand ist noch nicht eingerichtet. Es wurden keine Daten gesendet.',
             sending: 'Wird gesendet…',
-            requestSent: 'Vielen Dank für Ihre Anfrage! Wir haben Ihre Nachricht erhalten. Eine Eingangsbestätigung wurde Ihnen per E-Mail zugesandt. Wir werden Ihre Anfrage prüfen und uns schnellstmöglich bei Ihnen melden.',
+            requestSent: 'Vielen Dank für Ihre Anfrage! Wir haben Ihre Nachricht erhalten. Eine Eingangsbestätigung wurde Ihnen per E-Mail zugesandt. Wir werden Ihre Anfrage prüfen und uns schnellstmöglich bei Ihnen melden. Bitte überprüfen Sie auch Ihren Spam-Ordner, falls Sie keine E-Mail erhalten haben.',
             networkError: 'Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
         },
         en: {
@@ -64,7 +64,7 @@ if (form) {
             short: 'Please add a little more detail.', consent: 'Your consent is required.',
             notConfigured: 'The send destination is not configured. Nothing was sent.',
             sending: 'Sending…',
-            requestSent: 'Thank you for contacting YOROZU IT! Your inquiry has been received. A confirmation email has been sent to your email address. We will review your message and get back to you as soon as possible.',
+            requestSent: 'Thank you for contacting YOROZU IT! Your inquiry has been received. A confirmation email has been sent to your email address. We will review your message and get back to you as soon as possible. Please also check your spam folder if you do not receive an email.',
             networkError: 'There was a problem sending your request. Please try again later.'
         }
     };
