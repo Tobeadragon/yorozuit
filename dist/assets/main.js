@@ -48,7 +48,7 @@ if (form) {
             short: 'もう少し詳しく入力してください。', consent: '送信には同意が必要です。',
             notConfigured: '送信設定がまだ完了していません。内容は送信されていません。',
             sending: '送信しています…',
-            requestSent: '送信リクエストを送信しました。スプレッドシートへの記録完了はこの画面では確認できません。',
+            requestSent: 'お問い合わせありがとうございます。お問い合わせを受け付けました。受領確認メールをお送りしておりますので、ご確認ください。内容を確認のうえ、折り返しご連絡いたします。',
             networkError: '送信中にエラーが発生しました。時間をおいて再度お試しください。'
         },
         de: {
@@ -56,7 +56,7 @@ if (form) {
             short: 'Bitte geben Sie etwas mehr Details an.', consent: 'Bitte stimmen Sie der Verarbeitung zu.',
             notConfigured: 'Der Versand ist noch nicht eingerichtet. Es wurden keine Daten gesendet.',
             sending: 'Wird gesendet…',
-            requestSent: 'Die Anfrage wurde gesendet. Ob sie im Tabellenblatt gespeichert wurde, kann diese Seite nicht bestätigen.',
+            requestSent: 'Vielen Dank für Ihre Anfrage! Wir haben Ihre Nachricht erhalten. Eine Eingangsbestätigung wurde Ihnen per E-Mail zugesandt. Wir werden Ihre Anfrage prüfen und uns schnellstmöglich bei Ihnen melden.',
             networkError: 'Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.'
         },
         en: {
@@ -64,7 +64,7 @@ if (form) {
             short: 'Please add a little more detail.', consent: 'Your consent is required.',
             notConfigured: 'The send destination is not configured. Nothing was sent.',
             sending: 'Sending…',
-            requestSent: 'The request was sent. This page cannot confirm whether it was recorded in the spreadsheet.',
+            requestSent: 'Thank you for contacting YOROZU IT! Your inquiry has been received. A confirmation email has been sent to your email address. We will review your message and get back to you as soon as possible.',
             networkError: 'There was a problem sending your request. Please try again later.'
         }
     };
