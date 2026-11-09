@@ -66,7 +66,8 @@ const iconPaths = {
     web: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01M7 13h4M7 16h7"/>',
     devices: '<rect x="3" y="5" width="13" height="11" rx="1.5"/><path d="M7 20h5M9.5 16v4"/><rect x="17.5" y="8" width="4" height="10" rx="1"/><path d="M19 15.5h1"/>',
     wifi: '<path d="M3 9a14 14 0 0 1 18 0M6.5 12.5a8.5 8.5 0 0 1 11 0M10 16a3.2 3.2 0 0 1 4 0M12 20h.01"/>',
-    home: '<path d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5M9 20v-6h6v6"/>'
+    home: '<path d="m3 11 9-7 9 7M5.5 9.5V20h13V9.5M9 20v-6h6v6"/>',
+    ai: '<rect x="6.5" y="6.5" width="11" height="11" rx="2"/><path d="M9.5 2.5v4M14.5 2.5v4M9.5 17.5v4M14.5 17.5v4M2.5 9.5h4M2.5 14.5h4M17.5 9.5h4M17.5 14.5h4"/><path d="m12 9 1 2 2 .8-2 .8-1 2-1-.2-.8-1.8-2-.8 2-.8z"/>'
 };
 
 function escapeHtml(value) {
@@ -181,7 +182,7 @@ function renderReviews(data, lang, labels, translations) {
 }
 
 function validateContentData(data) {
-    const supportedServices = new Set(['general', 'web', 'purchase', 'internet', 'smart-home', 'other']);
+    const supportedServices = new Set(['general', 'web', 'purchase', 'internet', 'smart-home', 'ai', 'other']);
     const localizedFields = (value, label) => {
         if (typeof value === 'string') {
             if (!value.trim()) throw new Error(`${label} must not be empty`);

@@ -99,6 +99,26 @@
         "de": ["Smart-Geräte einrichten", "Mit WLAN verbinden", "Geräte miteinander verknüpfen", "Grundfunktionen prüfen"],
         "en": ["Set up smart devices", "Connect to Wi-Fi", "Link devices together", "Check basic operation"]
       }
+    },
+    {
+      "id": "case-06",
+      "service_category": "ai",
+      "icon": "ai",
+      "title": {
+        "ja": "AI活用サポート・個人講座・セミナー",
+        "de": "KI-Beratung, Einzeltraining & Seminare",
+        "en": "AI Guidance, Personal Training & Seminars"
+      },
+      "scenario": {
+        "ja": "ChatGPTなどの生成AIを日常生活や仕事で活用したいが、使い方が分からない。",
+        "de": "Sie möchten generative KI wie ChatGPT im Alltag und Beruf nutzen, wissen aber nicht, wie.",
+        "en": "You want to use generative AI like ChatGPT in everyday life and at work but are unsure how."
+      },
+      "support": {
+        "ja": ["ChatGPTなどの生成AIの使い方", "日常生活や仕事での実践的な活用法", "個人向けのマンツーマントレーニング", "企業・団体向けのセミナー"],
+        "de": ["Grundlagen und Bedienung von ChatGPT und anderen KI-Tools", "Praktische Anwendungen im Alltag und Beruf", "Individuelles Einzeltraining", "Seminare für Unternehmen und Gruppen"],
+        "en": ["Getting started with ChatGPT and other AI tools", "Practical AI applications for everyday life and work", "One-to-one personal training", "Seminars for companies and groups"]
+      }
     }
   ]
 }
