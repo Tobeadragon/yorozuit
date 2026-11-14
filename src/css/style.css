@@ -2623,3 +2623,43 @@ h1 {
         font-size: 19px;
     }
 }
+
+/* =========================================
+   Klaro Language Switcher
+========================================= */
+
+.klaro .yorozu-klaro-language-switch {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.klaro .yorozu-klaro-language-switch a {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.klaro .yorozu-klaro-language-switch a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.klaro .yorozu-klaro-language-switch a.is-active {
+    background: #ffffff;
+    color: #333333;
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .klaro .yorozu-klaro-language-switch {
+        justify-content: flex-start;
+    }
+}

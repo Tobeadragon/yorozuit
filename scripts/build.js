@@ -733,3 +733,38 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://w
 fs.writeFileSync(path.join(dist, 'sitemap.xml'), sitemap);
 fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${absoluteUrl('/sitemap.xml')}\n`);
 console.log('Built sitemap.xml and robots.txt');
+// Copy Klaro Cookie Consent assets
+const klaroSource = path.join(root, 'node_modules/klaro/dist');
+const klaroDestination = path.join(dist, 'assets/klaro');
+
+if (!fs.existsSync(klaroSource)) {
+    throw new Error('Klaro assets not found. Please run npm install klaro.');
+}
+
+fs.mkdirSync(klaroDestination, { recursive: true });
+
+for (const asset of ['klaro.js', 'klaro.css']) {
+    const source = path.join(klaroSource, asset);
+
+    if (!fs.existsSync(source)) {
+        throw new Error(`Klaro asset not found: ${source}`);
+    }
+
+    fs.copyFileSync(
+        source,
+        path.join(klaroDestination, asset)
+    );
+
+    console.log(`Copied Klaro asset: ${asset}`);
+}
+// Copy Cookie Consent configuration
+const cookieConsentSource = path.join(root, 'src/js/cookie-consent.js');
+const cookieConsentDestination = path.join(dist, 'assets/cookie-consent.js');
+
+if (!fs.existsSync(cookieConsentSource)) {
+    throw new Error('Cookie Consent configuration file not found.');
+}
+
+fs.copyFileSync(cookieConsentSource, cookieConsentDestination);
+
+console.log('Copied Cookie Consent configuration');
